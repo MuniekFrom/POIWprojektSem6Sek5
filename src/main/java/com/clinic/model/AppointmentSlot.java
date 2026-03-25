@@ -8,10 +8,11 @@ import java.time.LocalDateTime;
 public class AppointmentSlot {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "docor_id")
+    @JoinColumn(name = "doctor_id")
     private Doctor doctor;
 
     private LocalDateTime startTime;
@@ -32,10 +33,6 @@ public class AppointmentSlot {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Doctor getDoctor() {
@@ -73,6 +70,10 @@ public class AppointmentSlot {
 
     public void book(){
         this.status = AppointmentSlotStatus.BOOKED;
+    }
+
+    public boolean isAvailable() {
+        return this.status == AppointmentSlotStatus.AVAILABLE;
     }
 
 
