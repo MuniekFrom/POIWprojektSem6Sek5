@@ -1,6 +1,7 @@
 package com.clinic.model;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
@@ -15,6 +16,7 @@ public class User {
     private String email;
 
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
 
     @Enumerated(EnumType.STRING)

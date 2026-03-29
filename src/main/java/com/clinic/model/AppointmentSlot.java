@@ -1,8 +1,8 @@
 package com.clinic.model;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class AppointmentSlot {
@@ -21,7 +21,11 @@ public class AppointmentSlot {
     @Enumerated(EnumType.STRING)
     private AppointmentSlotStatus status;
 
-    public AppointmentSlot(){
+    @OneToOne(mappedBy = "appointmentSlot")
+    @JsonIgnore
+    private Appointment appointment;
+
+    public AppointmentSlot() {
     }
 
     public AppointmentSlot(Doctor doctor, LocalDateTime startTime, LocalDateTime endTime, AppointmentSlotStatus status) {
@@ -67,14 +71,19 @@ public class AppointmentSlot {
         this.status = status;
     }
 
+    public Appointment getAppointment() {
+        return appointment;
+    }
 
-    public void book(){
+    public void setAppointment(Appointment appointment) {
+        this.appointment = appointment;
+    }
+
+    public void book() {
         this.status = AppointmentSlotStatus.BOOKED;
     }
 
     public boolean isAvailable() {
         return this.status == AppointmentSlotStatus.AVAILABLE;
     }
-
-
 }
