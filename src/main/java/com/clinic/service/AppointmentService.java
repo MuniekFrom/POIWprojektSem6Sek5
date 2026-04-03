@@ -1,6 +1,10 @@
 package com.clinic.service;
 
+import com.clinic.dto.AppointmentRequest;
 import com.clinic.dto.AppointmentResponse;
+import com.clinic.dto.AppointmentSlotResponse;
+import com.clinic.exception.BusinessValidationException;
+import com.clinic.exception.ResourceNotFoundException;
 import com.clinic.model.Appointment;
 import com.clinic.model.AppointmentSlot;
 import com.clinic.model.AppointmentSlotStatus;
@@ -9,12 +13,10 @@ import com.clinic.repository.AppointmentRepository;
 import com.clinic.repository.AppointmentSlotRepository;
 import com.clinic.repository.PatientRepository;
 import org.springframework.stereotype.Service;
-import com.clinic.dto.AppointmentSlotResponse;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AppointmentService {
@@ -31,29 +33,52 @@ public class AppointmentService {
         this.patientRepository = patientRepository;
     }
 
-    public Appointment bookAppointment(Long slotId, Long patientId, String reason) {
-        AppointmentSlot slot = appointmentSlotRepository.findById(slotId)
-                .orElseThrow(() -> new RuntimeException("Slot not found"));
+    public AppointmentResponse bookAppointment(AppointmentRequest request) {
+        AppointmentSlot slot = appointmentSlotRepository.findById(request.getSlotId())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Slot not found with id: " + request.getSlotId()
+                ));
 
         if (!slot.isAvailable()) {
-            throw new RuntimeException("Slot is already booked");
+            throw new BusinessValidationException("Slot is already booked");
         }
 
-        Patient patient = patientRepository.findById(patientId)
-                .orElseThrow(() -> new RuntimeException("Patient not found"));
+        Patient patient = patientRepository.findById(request.getPatientId())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Patient not found with id: " + request.getPatientId()
+                ));
 
         Appointment appointment = new Appointment();
         appointment.setAppointmentSlot(slot);
         appointment.setPatient(patient);
         appointment.setBookedAt(LocalDateTime.now());
-        appointment.setReason(reason);
+        appointment.setReason(request.getReason());
 
-        slot.book();
+        slot.setStatus(AppointmentSlotStatus.BOOKED);
 
-        return appointmentRepository.save(appointment);
+        Appointment savedAppointment = appointmentRepository.save(appointment);
+        appointmentSlotRepository.save(slot);
+
+        return new AppointmentResponse(
+                savedAppointment.getId(),
+                savedAppointment.getAppointmentSlot().getDoctor().getFirstName() + " " +
+                        savedAppointment.getAppointmentSlot().getDoctor().getLastName(),
+                savedAppointment.getAppointmentSlot().getDoctor().getSpecialization(),
+                savedAppointment.getPatient().getFirstName() + " " +
+                        savedAppointment.getPatient().getLastName(),
+                savedAppointment.getAppointmentSlot().getStartTime(),
+                savedAppointment.getAppointmentSlot().getEndTime(),
+                savedAppointment.getBookedAt(),
+                savedAppointment.getReason(),
+                savedAppointment.getAppointmentSlot().getStatus().name()
+        );
     }
 
     public List<AppointmentResponse> getAppointmentsByPatient(Long patientId) {
+        if (!patientRepository.existsById(patientId)) {
+            throw new ResourceNotFoundException("Patient not found with id: " + patientId);
+        }
+
         return appointmentRepository.findByPatientId(patientId)
                 .stream()
                 .map(appointment -> new AppointmentResponse(
@@ -87,15 +112,14 @@ public class AppointmentService {
 
     public void cancelAppointment(Long appointmentId) {
         Appointment appointment = appointmentRepository.findById(appointmentId)
-                .orElseThrow(() -> new RuntimeException("Appointment not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Appointment not found with id: " + appointmentId
+                ));
 
         AppointmentSlot slot = appointment.getAppointmentSlot();
-
         slot.setStatus(AppointmentSlotStatus.AVAILABLE);
-        slot.setAppointment(null);
 
         appointmentRepository.delete(appointment);
         appointmentSlotRepository.save(slot);
     }
-
 }

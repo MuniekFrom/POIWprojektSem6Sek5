@@ -2,12 +2,16 @@ package com.clinic.service;
 
 import com.clinic.dto.AppointmentSlotResponse;
 import com.clinic.dto.CreateAppointmentSlotRequest;
+import com.clinic.exception.BusinessValidationException;
+import com.clinic.exception.ResourceNotFoundException;
 import com.clinic.model.AppointmentSlot;
 import com.clinic.model.AppointmentSlotStatus;
 import com.clinic.model.Doctor;
 import com.clinic.repository.AppointmentSlotRepository;
 import com.clinic.repository.DoctorRepository;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 public class AppointmentSlotService {
@@ -23,7 +27,32 @@ public class AppointmentSlotService {
 
     public AppointmentSlotResponse createSlot(CreateAppointmentSlotRequest request) {
         Doctor doctor = doctorRepository.findById(request.getDoctorId())
-                .orElseThrow(() -> new RuntimeException("Doctor not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Doctor not found with id: " + request.getDoctorId()
+                ));
+
+        if (request.getStartTime() == null || request.getEndTime() == null) {
+            throw new IllegalArgumentException("startTime and endTime cannot be null");
+        }
+
+        if (!request.getEndTime().isAfter(request.getStartTime())) {
+            throw new BusinessValidationException("endTime must be after startTime");
+        }
+
+        if (request.getStartTime().isBefore(LocalDateTime.now())) {
+            throw new BusinessValidationException("Cannot create slot in the past");
+        }
+
+        boolean overlaps = appointmentSlotRepository
+                .existsByDoctorAndStartTimeLessThanAndEndTimeGreaterThan(
+                        doctor,
+                        request.getEndTime(),
+                        request.getStartTime()
+                );
+
+        if (overlaps) {
+            throw new BusinessValidationException("Slot overlaps with existing doctor's slot");
+        }
 
         AppointmentSlot slot = new AppointmentSlot();
         slot.setDoctor(doctor);
