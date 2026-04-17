@@ -1,8 +1,8 @@
 INSERT INTO users (id, email, password, role)
-VALUES (1, 'doctor@example.com', 'test', 'DOCTOR');
+VALUES (1, 'doctor@example.com', '$2a$10$oPQurQBq3Lffvpb7CzeX9uSvy6Gxzz5j5hGCP.gA39icmX.aFEQpC', 'DOCTOR');
 
 INSERT INTO users (id, email, password, role)
-VALUES (2, 'anna@example.com', 'test', 'PATIENT');
+VALUES (2, 'anna@example.com', '$2a$10$oPQurQBq3Lffvpb7CzeX9uSvy6Gxzz5j5hGCP.gA39icmX.aFEQpC', 'PATIENT');
 
 INSERT INTO doctors (id, user_id, first_name, last_name, specialization)
 VALUES (1, 1, 'Jan', 'Kowalski', 'Kardiolog');

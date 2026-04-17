@@ -1,8 +1,7 @@
 package com.clinic.model;
 
-import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
@@ -20,6 +19,7 @@ public class User {
     private String password;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Role role;
 
     public User() {}
