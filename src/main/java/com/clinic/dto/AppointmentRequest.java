@@ -1,10 +1,23 @@
 package com.clinic.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class AppointmentRequest {
 
+    @NotNull(message = "Slot id is required")
     private Long slotId;
-    private Long patientId;
+
+    @NotBlank(message = "Reason is required")
     private String reason;
+
+    public AppointmentRequest() {
+    }
+
+    public AppointmentRequest(Long slotId, String reason) {
+        this.slotId = slotId;
+        this.reason = reason;
+    }
 
     public Long getSlotId() {
         return slotId;
@@ -12,14 +25,6 @@ public class AppointmentRequest {
 
     public void setSlotId(Long slotId) {
         this.slotId = slotId;
-    }
-
-    public Long getPatientId() {
-        return patientId;
-    }
-
-    public void setPatientId(Long patientId) {
-        this.patientId = patientId;
     }
 
     public String getReason() {

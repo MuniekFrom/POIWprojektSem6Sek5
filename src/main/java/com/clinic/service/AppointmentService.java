@@ -33,7 +33,7 @@ public class AppointmentService {
         this.patientRepository = patientRepository;
     }
 
-    public AppointmentResponse bookAppointment(AppointmentRequest request) {
+    public AppointmentResponse bookAppointment(AppointmentRequest request, String email) {
         AppointmentSlot slot = appointmentSlotRepository.findById(request.getSlotId())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Slot not found with id: " + request.getSlotId()
@@ -43,9 +43,9 @@ public class AppointmentService {
             throw new BusinessValidationException("Slot is already booked");
         }
 
-        Patient patient = patientRepository.findById(request.getPatientId())
+        Patient patient = patientRepository.findByUserEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "Patient not found with id: " + request.getPatientId()
+                        "Patient not found for email: " + email
                 ));
 
         Appointment appointment = new Appointment();
@@ -59,40 +59,19 @@ public class AppointmentService {
         Appointment savedAppointment = appointmentRepository.save(appointment);
         appointmentSlotRepository.save(slot);
 
-        return new AppointmentResponse(
-                savedAppointment.getId(),
-                savedAppointment.getAppointmentSlot().getDoctor().getFirstName() + " " +
-                        savedAppointment.getAppointmentSlot().getDoctor().getLastName(),
-                savedAppointment.getAppointmentSlot().getDoctor().getSpecialization(),
-                savedAppointment.getPatient().getFirstName() + " " +
-                        savedAppointment.getPatient().getLastName(),
-                savedAppointment.getAppointmentSlot().getStartTime(),
-                savedAppointment.getAppointmentSlot().getEndTime(),
-                savedAppointment.getBookedAt(),
-                savedAppointment.getReason(),
-                savedAppointment.getAppointmentSlot().getStatus().name()
-        );
+        return mapToAppointmentResponse(savedAppointment);
     }
 
-    public List<AppointmentResponse> getAppointmentsByPatient(Long patientId) {
-        if (!patientRepository.existsById(patientId)) {
-            throw new ResourceNotFoundException("Patient not found with id: " + patientId);
-        }
 
-        return appointmentRepository.findByPatientId(patientId)
+    public List<AppointmentResponse> getAppointmentsForLoggedPatient(String email) {
+        Patient patient = patientRepository.findByUserEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Patient not found for email: " + email
+                ));
+
+        return appointmentRepository.findByPatientId(patient.getId())
                 .stream()
-                .map(appointment -> new AppointmentResponse(
-                        appointment.getId(),
-                        appointment.getAppointmentSlot().getDoctor().getFirstName() + " " +
-                                appointment.getAppointmentSlot().getDoctor().getLastName(),
-                        appointment.getAppointmentSlot().getDoctor().getSpecialization(),
-                        appointment.getPatient().getFirstName() + " " + appointment.getPatient().getLastName(),
-                        appointment.getAppointmentSlot().getStartTime(),
-                        appointment.getAppointmentSlot().getEndTime(),
-                        appointment.getBookedAt(),
-                        appointment.getReason(),
-                        appointment.getAppointmentSlot().getStatus().name()
-                ))
+                .map(this::mapToAppointmentResponse)
                 .collect(Collectors.toList());
     }
 
@@ -110,16 +89,41 @@ public class AppointmentService {
                 .collect(Collectors.toList());
     }
 
-    public void cancelAppointment(Long appointmentId) {
+    public void cancelAppointment(Long appointmentId, String email) {
         Appointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Appointment not found with id: " + appointmentId
                 ));
+
+        Patient patient = patientRepository.findByUserEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Patient not found for email: " + email
+                ));
+
+        if (!appointment.getPatient().getId().equals(patient.getId())) {
+            throw new BusinessValidationException("You can cancel only your own appointments");
+        }
 
         AppointmentSlot slot = appointment.getAppointmentSlot();
         slot.setStatus(AppointmentSlotStatus.AVAILABLE);
 
         appointmentRepository.delete(appointment);
         appointmentSlotRepository.save(slot);
+    }
+
+    private AppointmentResponse mapToAppointmentResponse(Appointment appointment) {
+        return new AppointmentResponse(
+                appointment.getId(),
+                appointment.getAppointmentSlot().getDoctor().getFirstName() + " " +
+                        appointment.getAppointmentSlot().getDoctor().getLastName(),
+                appointment.getAppointmentSlot().getDoctor().getSpecialization(),
+                appointment.getPatient().getFirstName() + " " +
+                        appointment.getPatient().getLastName(),
+                appointment.getAppointmentSlot().getStartTime(),
+                appointment.getAppointmentSlot().getEndTime(),
+                appointment.getBookedAt(),
+                appointment.getReason(),
+                appointment.getAppointmentSlot().getStatus().name()
+        );
     }
 }

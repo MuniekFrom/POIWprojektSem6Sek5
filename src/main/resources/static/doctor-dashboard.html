@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel lekarza</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Panel lekarza</h1>
+
+    <div id="doctorData">Ładowanie danych...</div>
+
+    <hr>
+
+    <h2>Dodaj slot</h2>
+
+    <form id="slotForm">
+        <label for="startTime">Początek wizyty</label>
+        <input type="datetime-local" id="startTime" step="300" required>
+
+        <label for="endTime">Koniec wizyty</label>
+        <input type="datetime-local" id="endTime" step="300" required>
+
+        <button type="submit">Dodaj slot</button>
+    </form>
+
+    <p id="slotMessage"></p>
+
+    <hr>
+
+    <h2>Moje sloty</h2>
+    <div id="slotsContainer">Ładowanie slotów...</div>
+
+    <button onclick="logout()">Wyloguj</button>
+
+</div>
+
+<script src="/js/config.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/doctor-dashboard.js"></script>
+
+</body>
+</html>

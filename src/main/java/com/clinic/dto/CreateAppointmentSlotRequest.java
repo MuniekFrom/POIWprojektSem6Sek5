@@ -1,22 +1,23 @@
 package com.clinic.dto;
 
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDateTime;
 
 public class CreateAppointmentSlotRequest {
 
-    private Long doctorId;
+    @NotNull(message = "startTime is required")
     private LocalDateTime startTime;
+
+    @NotNull(message = "endTime is required")
     private LocalDateTime endTime;
 
     public CreateAppointmentSlotRequest() {
     }
 
-    public Long getDoctorId() {
-        return doctorId;
-    }
-
-    public void setDoctorId(Long doctorId) {
-        this.doctorId = doctorId;
+    public CreateAppointmentSlotRequest(LocalDateTime startTime, LocalDateTime endTime) {
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
     public LocalDateTime getStartTime() {

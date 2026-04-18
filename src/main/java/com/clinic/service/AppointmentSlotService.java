@@ -12,6 +12,8 @@ import com.clinic.repository.DoctorRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AppointmentSlotService {
@@ -25,10 +27,10 @@ public class AppointmentSlotService {
         this.doctorRepository = doctorRepository;
     }
 
-    public AppointmentSlotResponse createSlot(CreateAppointmentSlotRequest request) {
-        Doctor doctor = doctorRepository.findById(request.getDoctorId())
+    public AppointmentSlotResponse createSlot(CreateAppointmentSlotRequest request, String email) {
+        Doctor doctor = doctorRepository.findByUserEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "Doctor not found with id: " + request.getDoctorId()
+                        "Doctor not found for email: " + email
                 ));
 
         if (request.getStartTime() == null || request.getEndTime() == null) {
@@ -62,13 +64,51 @@ public class AppointmentSlotService {
 
         AppointmentSlot savedSlot = appointmentSlotRepository.save(slot);
 
+        return mapToAppointmentSlotResponse(savedSlot);
+    }
+
+    public void deleteSlot(Long slotId, String email) {
+        AppointmentSlot slot = appointmentSlotRepository.findById(slotId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Slot not found with id: " + slotId
+                ));
+
+        Doctor doctor = doctorRepository.findByUserEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Doctor not found for email: " + email
+                ));
+
+        if (!slot.getDoctor().getId().equals(doctor.getId())) {
+            throw new BusinessValidationException("You can delete only your own slots");
+        }
+
+        if (slot.getStatus() == AppointmentSlotStatus.BOOKED) {
+            throw new BusinessValidationException("Cannot delete booked slot");
+        }
+
+        appointmentSlotRepository.delete(slot);
+    }
+
+    public List<AppointmentSlotResponse> getSlotsForLoggedDoctor(String email) {
+        Doctor doctor = doctorRepository.findByUserEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Doctor not found for email: " + email
+                ));
+
+        return appointmentSlotRepository.findByDoctorId(doctor.getId())
+                .stream()
+                .map(this::mapToAppointmentSlotResponse)
+                .collect(Collectors.toList());
+    }
+
+    private AppointmentSlotResponse mapToAppointmentSlotResponse(AppointmentSlot slot) {
         return new AppointmentSlotResponse(
-                savedSlot.getId(),
-                savedSlot.getDoctor().getFirstName() + " " + savedSlot.getDoctor().getLastName(),
-                savedSlot.getDoctor().getSpecialization(),
-                savedSlot.getStartTime(),
-                savedSlot.getEndTime(),
-                savedSlot.getStatus().name()
+                slot.getId(),
+                slot.getDoctor().getFirstName() + " " + slot.getDoctor().getLastName(),
+                slot.getDoctor().getSpecialization(),
+                slot.getStartTime(),
+                slot.getEndTime(),
+                slot.getStatus().name()
         );
     }
 }

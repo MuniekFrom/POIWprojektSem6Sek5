@@ -12,6 +12,8 @@ public interface AppointmentSlotRepository extends JpaRepository<AppointmentSlot
 
     List<AppointmentSlot> findByDoctorIdAndStatus(Long doctorId, AppointmentSlotStatus status);
 
+    List<AppointmentSlot> findByDoctorId(Long doctorId);
+
     boolean existsByDoctorAndStartTimeLessThanAndEndTimeGreaterThan(
             Doctor doctor,
             LocalDateTime endTime,

@@ -1,5 +1,6 @@
 package com.clinic.service;
 
+import com.clinic.dto.DoctorProfileResponse;
 import com.clinic.dto.DoctorResponse;
 import com.clinic.exception.ResourceNotFoundException;
 import com.clinic.model.Doctor;
@@ -40,6 +41,22 @@ public class DoctorService {
 
         return ResponseEntity.ok(response);
     }
+
+    public DoctorProfileResponse getLoggedDoctor(String email) {
+        Doctor doctor = doctorRepository.findByUserEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Doctor not found for email: " + email
+                ));
+
+        return new DoctorProfileResponse(
+                doctor.getId(),
+                doctor.getFirstName(),
+                doctor.getLastName(),
+                doctor.getUser().getEmail(),
+                doctor.getSpecialization()
+        );
+    }
+
 
     private DoctorResponse mapToResponse(Doctor doctor) {
         return new DoctorResponse(
