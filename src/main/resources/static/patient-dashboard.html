@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel pacjenta</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Panel pacjenta</h1>
+
+    <div id="patientData">Ładowanie danych...</div>
+
+    <hr>
+
+    <h2>Moje wizyty</h2>
+    <div id="appointmentsContainer">
+        Wkrótce tutaj pojawią się wizyty.
+    </div>
+
+    <button onclick="logout()">Wyloguj</button>
+
+
+    <h2>Dostępni lekarze</h2>
+    <div id="doctorsContainer"></div>
+
+    <h2>Wolne terminy</h2>
+    <div id="slotsContainer"></div>
+</div>
+
+<script src="/js/config.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/patient-dashboard.js"></script>
+
+</body>
+</html>

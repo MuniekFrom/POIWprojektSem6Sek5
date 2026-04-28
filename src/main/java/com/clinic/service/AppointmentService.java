@@ -43,6 +43,10 @@ public class AppointmentService {
             throw new BusinessValidationException("Slot is already booked");
         }
 
+        if (appointmentRepository.existsByAppointmentSlotId(slot.getId())) {
+            throw new BusinessValidationException("Appointment already exists for this slot");
+        }
+
         Patient patient = patientRepository.findByUserEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Patient not found for email: " + email
@@ -55,9 +59,9 @@ public class AppointmentService {
         appointment.setReason(request.getReason());
 
         slot.setStatus(AppointmentSlotStatus.BOOKED);
+        appointmentSlotRepository.save(slot);
 
         Appointment savedAppointment = appointmentRepository.save(appointment);
-        appointmentSlotRepository.save(slot);
 
         return mapToAppointmentResponse(savedAppointment);
     }
@@ -71,6 +75,7 @@ public class AppointmentService {
 
         return appointmentRepository.findByPatientId(patient.getId())
                 .stream()
+                .filter(appointment -> appointment.getAppointmentSlot().getStatus() == AppointmentSlotStatus.BOOKED)
                 .map(this::mapToAppointmentResponse)
                 .collect(Collectors.toList());
     }
@@ -107,8 +112,10 @@ public class AppointmentService {
         AppointmentSlot slot = appointment.getAppointmentSlot();
         slot.setStatus(AppointmentSlotStatus.AVAILABLE);
 
-        appointmentRepository.delete(appointment);
         appointmentSlotRepository.save(slot);
+
+        // NIE USUWAJ NA RAZIE:
+        // appointmentRepository.delete(appointment);
     }
 
     private AppointmentResponse mapToAppointmentResponse(Appointment appointment) {
