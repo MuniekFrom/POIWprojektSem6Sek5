@@ -25,8 +25,12 @@ function redirectByRole() {
 
     if (role === "DOCTOR") {
         window.location.href = "/doctor-dashboard.html";
-    } else {
+    } else if (role === "PATIENT") {
         window.location.href = "/patient-dashboard.html";
+    } else if (role === "ADMIN") {
+        window.location.href = "/admin-dashboard.html";
+    } else {
+        window.location.href = "/login.html";
     }
 }
 

@@ -46,6 +46,7 @@ public class SecurityConfig {
                                 "/login.html",
                                 "/doctors.html",
                                 "/doctor.html",
+                                "/admin-dashboard.html",
                                 "/patient-dashboard.html",
                                 "/doctor-dashboard.html",
                                 "/css/**",
@@ -53,6 +54,9 @@ public class SecurityConfig {
                                 "/images/**",
                                 "/auth/**"
                         ).permitAll()
+
+
+                        .requestMatchers(HttpMethod.GET, "/admin/**").hasRole("ADMIN")
 
                         .requestMatchers(HttpMethod.GET, "/doctors/me").hasRole("DOCTOR")
                         .requestMatchers(HttpMethod.GET, "/doctors/**").permitAll()
