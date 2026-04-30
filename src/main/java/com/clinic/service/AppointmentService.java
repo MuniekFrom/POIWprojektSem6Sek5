@@ -5,13 +5,11 @@ import com.clinic.dto.AppointmentResponse;
 import com.clinic.dto.AppointmentSlotResponse;
 import com.clinic.exception.BusinessValidationException;
 import com.clinic.exception.ResourceNotFoundException;
-import com.clinic.model.Appointment;
-import com.clinic.model.AppointmentSlot;
-import com.clinic.model.AppointmentSlotStatus;
-import com.clinic.model.Patient;
+import com.clinic.model.*;
 import com.clinic.repository.AppointmentRepository;
 import com.clinic.repository.AppointmentSlotRepository;
 import com.clinic.repository.PatientRepository;
+import com.clinic.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,13 +22,16 @@ public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final AppointmentSlotRepository appointmentSlotRepository;
     private final PatientRepository patientRepository;
+    private final UserRepository userRepository;
 
     public AppointmentService(AppointmentRepository appointmentRepository,
                               AppointmentSlotRepository appointmentSlotRepository,
-                              PatientRepository patientRepository) {
+                              PatientRepository patientRepository,
+                              UserRepository userRepository) {
         this.appointmentRepository = appointmentRepository;
         this.appointmentSlotRepository = appointmentSlotRepository;
         this.patientRepository = patientRepository;
+        this.userRepository = userRepository;
     }
 
     public AppointmentResponse bookAppointment(AppointmentRequest request, String email) {
@@ -114,7 +115,6 @@ public class AppointmentService {
 
         appointmentSlotRepository.save(slot);
 
-        // NIE USUWAJ NA RAZIE:
         // appointmentRepository.delete(appointment);
     }
 
@@ -133,4 +133,45 @@ public class AppointmentService {
                 appointment.getAppointmentSlot().getStatus().name()
         );
     }
+
+    public List<AppointmentResponse> getAllAppointments() {
+        return appointmentRepository.findAll()
+                .stream()
+                .filter(appointment -> appointment.getAppointmentSlot().getStatus() == AppointmentSlotStatus.BOOKED)
+                .map(this::mapToAppointmentResponse)
+                .collect(Collectors.toList());
+    }
+
+    public void deleteAppointmentByAdmin(Long appointmentId) {
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Appointment not found with id: " + appointmentId
+                ));
+
+        AppointmentSlot slot = appointment.getAppointmentSlot();
+        slot.setStatus(AppointmentSlotStatus.AVAILABLE);
+
+        appointmentSlotRepository.save(slot);
+
+
+        // appointmentRepository.delete(appointment);
+    }
+
+    public void deleteUserByAdmin(Long userId, String adminEmail) {
+        User admin = userRepository.findByEmail(adminEmail)
+                .orElseThrow(() -> new ResourceNotFoundException("Admin not found"));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+
+        if (admin.getId().equals(user.getId())) {
+            throw new BusinessValidationException("Admin cannot delete own account");
+        }
+
+        userRepository.delete(user);
+    }
+
+
+
+
 }
