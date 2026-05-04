@@ -1,5 +1,6 @@
 package com.clinic.model;
 
+import com.clinic.model.enums.AppointmentStatus;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -11,13 +12,17 @@ public class Appointment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "appointment_slot_id", nullable = false, unique = true)
+    @ManyToOne
+    @JoinColumn(name = "appointment_slot_id", nullable = false)
     private AppointmentSlot appointmentSlot;
 
     @ManyToOne
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AppointmentStatus status = AppointmentStatus.BOOKED;
 
     private LocalDateTime bookedAt;
 
@@ -31,6 +36,7 @@ public class Appointment {
         this.patient = patient;
         this.bookedAt = bookedAt;
         this.reason = reason;
+        this.status = AppointmentStatus.BOOKED;
     }
 
     public Long getId() {
@@ -67,5 +73,13 @@ public class Appointment {
 
     public void setReason(String reason) {
         this.reason = reason;
+    }
+
+    public AppointmentStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(AppointmentStatus status) {
+        this.status = status;
     }
 }

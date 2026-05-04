@@ -3,30 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <title>Logowanie</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/login.css">
 </head>
-<body>
+<body class="login-body">
 
-<div class="container">
-    <h1>Logowanie</h1>
+<div class="login-wrapper">
+    <a href="/index.html" class="back-link">← Powrót na stronę główną</a>
 
-    <form id="loginForm">
+    <div class="container">
+        <h1>Logowanie</h1>
 
-        <input type="email" id="email" placeholder="Email" required>
+        <form id="loginForm">
+            <div>
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="Wpisz email" required>
+            </div>
 
-        <input type="password" id="password" placeholder="Hasło" required>
+            <div>
+                <label for="password">Hasło</label>
+                <input type="password" id="password" placeholder="Wpisz hasło" required>
+            </div>
 
-        <button type="submit">Zaloguj</button>
+            <button type="submit">Zaloguj</button>
+        </form>
 
-    </form>
+        <p class="auth-switch">
+            Nie masz konta?
+            <a href="/register.html">Zarejestruj się</a>
+        </p>
 
-    <p id="error"></p>
+        <p id="errorMessage"></p>
+    </div>
 </div>
 
-<script src="/js/config.js"></script>
-<script src="/js/api.js"></script>
-<script src="/js/auth.js"></script>
-<script src="/js/login.js"></script>
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/login.js"></script>
 
 </body>
 </html>

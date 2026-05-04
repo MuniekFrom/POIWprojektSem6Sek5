@@ -42,21 +42,25 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/",
+                                "/ZapisyDoLekarza",
                                 "/index.html",
                                 "/login.html",
+                                "/register.html",
                                 "/doctors.html",
                                 "/doctor.html",
                                 "/admin-dashboard.html",
                                 "/patient-dashboard.html",
                                 "/doctor-dashboard.html",
+                                "/favicon.ico",
                                 "/css/**",
                                 "/js/**",
                                 "/images/**",
                                 "/auth/**"
                         ).permitAll()
 
-
                         .requestMatchers(HttpMethod.GET, "/admin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/admin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/admin/**").hasRole("ADMIN")
 
                         .requestMatchers(HttpMethod.GET, "/doctors/me").hasRole("DOCTOR")
                         .requestMatchers(HttpMethod.GET, "/doctors/**").permitAll()

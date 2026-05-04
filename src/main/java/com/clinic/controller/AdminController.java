@@ -1,6 +1,11 @@
 package com.clinic.controller;
 
 import com.clinic.dto.AppointmentResponse;
+import com.clinic.exception.BusinessValidationException;
+import com.clinic.exception.ResourceNotFoundException;
+import com.clinic.model.User;
+import com.clinic.model.enums.Role;
+import com.clinic.model.enums.UserStatus;
 import com.clinic.repository.*;
 import com.clinic.service.AppointmentService;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +40,6 @@ public class AdminController {
         this.appointmentSlotRepository = appointmentSlotRepository;
     }
 
-
     @GetMapping("/me")
     public ResponseEntity<Map<String, String>> getAdmin(Authentication authentication) {
         return ResponseEntity.ok(Map.of(
@@ -52,10 +56,65 @@ public class AdminController {
                         .map(user -> Map.<String, Object>of(
                                 "id", user.getId(),
                                 "email", user.getEmail(),
-                                "role", user.getRole().name()
+                                "role", user.getRole().name(),
+                                "status", user.getStatus().name()
                         ))
                         .toList()
         );
+    }
+
+    @GetMapping("/doctors/pending")
+    public ResponseEntity<List<Map<String, Object>>> getPendingDoctors() {
+        List<Map<String, Object>> pendingDoctors = userRepository
+                .findByRoleAndStatus(Role.DOCTOR, UserStatus.PENDING)
+                .stream()
+                .map(user -> Map.<String, Object>of(
+                        "id", user.getId(),
+                        "email", user.getEmail(),
+                        "role", user.getRole().name(),
+                        "status", user.getStatus().name()
+                ))
+                .toList();
+
+        return ResponseEntity.ok(pendingDoctors);
+    }
+
+    @PutMapping("/doctors/{userId}/approve")
+    public ResponseEntity<Void> approveDoctor(@PathVariable Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+
+        if (user.getRole() != Role.DOCTOR) {
+            throw new BusinessValidationException("Only doctor accounts can be approved");
+        }
+
+        if (user.getStatus() != UserStatus.PENDING) {
+            throw new BusinessValidationException("Doctor is not pending");
+        }
+
+        user.setStatus(UserStatus.ACTIVE);
+        userRepository.save(user);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/doctors/{userId}/reject")
+    public ResponseEntity<Void> rejectDoctor(@PathVariable Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+
+        if (user.getRole() != Role.DOCTOR) {
+            throw new BusinessValidationException("Only doctor accounts can be rejected");
+        }
+
+        if (user.getStatus() != UserStatus.PENDING) {
+            throw new BusinessValidationException("Doctor is not pending");
+        }
+
+        user.setStatus(UserStatus.REJECTED);
+        userRepository.save(user);
+
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/appointments")
@@ -70,7 +129,7 @@ public class AdminController {
     }
 
     @DeleteMapping("/users/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long userId, Authentication authentication){
+    public ResponseEntity<Void> deleteUser(@PathVariable Long userId, Authentication authentication) {
         appointmentService.deleteUserByAdmin(userId, authentication.getName());
         return ResponseEntity.noContent().build();
     }
@@ -85,6 +144,4 @@ public class AdminController {
                 "slots", appointmentSlotRepository.count()
         ));
     }
-
-
 }

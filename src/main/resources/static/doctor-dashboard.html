@@ -3,45 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <title>Panel lekarza</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
 </head>
-<body>
+<body class="dashboard-page doctor-page">
 
-<div class="container">
+<div class="dashboard-shell">
 
-    <h1>Panel lekarza</h1>
+    <header class="dashboard-topbar">
+        <div>
+            <p class="eyebrow">Clinic Appointment System</p>
+            <h1>Panel lekarza</h1>
+        </div>
 
-    <div id="doctorData">Ładowanie danych...</div>
+        <button class="logout-btn" onclick="logout()">Wyloguj</button>
+    </header>
 
-    <hr>
+    <section class="dashboard-grid">
 
-    <h2>Dodaj slot</h2>
+        <aside class="profile-card">
+            <h2>Profil lekarza</h2>
+            <div id="doctorData">Ładowanie danych...</div>
+        </aside>
 
-    <form id="slotForm">
-        <label for="startTime">Początek wizyty</label>
-        <input type="datetime-local" id="startTime" step="300" required>
+        <section class="action-card">
+            <h2>Dodaj dostępny termin</h2>
+            <p class="section-description">
+                Utwórz nowy slot wizyty, który będzie widoczny dla pacjentów.
+            </p>
 
-        <label for="endTime">Koniec wizyty</label>
-        <input type="datetime-local" id="endTime" step="300" required>
+            <form id="slotForm">
+                <div>
+                    <label for="startTime">Początek wizyty</label>
+                    <input type="datetime-local" id="startTime" required>
+                </div>
 
-        <button type="submit">Dodaj slot</button>
-    </form>
+                <div>
+                    <label for="endTime">Koniec wizyty</label>
+                    <input type="datetime-local" id="endTime" required>
+                </div>
 
-    <p id="slotMessage"></p>
+                <button type="submit">Dodaj slot</button>
+            </form>
 
-    <hr>
+            <p id="slotMessage"></p>
+        </section>
 
-    <h2>Moje sloty</h2>
-    <div id="slotsContainer">Ładowanie slotów...</div>
+    </section>
 
-    <button onclick="logout()">Wyloguj</button>
+    <section class="content-section">
+        <div class="section-header">
+            <div>
+                <p class="eyebrow">Terminy</p>
+                <h2>Moje sloty</h2>
+            </div>
+        </div>
+
+        <div id="slotsContainer" class="cards-grid">
+            Ładowanie slotów...
+        </div>
+    </section>
 
 </div>
 
 <script src="/js/config.js"></script>
 <script src="/js/api.js"></script>
 <script src="/js/auth.js"></script>
-<script src="/js/doctor-dashboard.js"></script>
+<script src="/js/doctor-dashboard.js?v=2"></script>
 
 </body>
 </html>

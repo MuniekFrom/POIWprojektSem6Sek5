@@ -1,0 +1,75 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #0f172a;
+    background-color: #f4f6f8;
+}
+
+a {
+    color: inherit;
+}
+
+button {
+    font-family: inherit;
+}
+
+.primary-btn,
+.secondary-btn {
+    display: inline-block;
+    padding: 14px 22px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: 0.2s ease;
+}
+
+.primary-btn {
+    background: #2563eb;
+    color: white;
+}
+
+.primary-btn:hover {
+    background: #1d4ed8;
+}
+
+.secondary-btn {
+    background: white;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+}
+
+.secondary-btn:hover {
+    background: #eff6ff;
+}
+
+.status-booked {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background-color: #dcfce7;
+    color: #166534;
+    font-weight: 600;
+}
+
+.status-cancelled {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background-color: #fee2e2;
+    color: #991b1b;
+    font-weight: 600;
+}
+
+.cancelled-info {
+    color: #991b1b;
+    font-weight: 600;
+}

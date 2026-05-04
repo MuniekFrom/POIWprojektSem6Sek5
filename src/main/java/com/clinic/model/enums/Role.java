@@ -1,4 +1,4 @@
-package com.clinic.model;
+package com.clinic.model.enums;
 
 public enum Role {
     ADMIN,

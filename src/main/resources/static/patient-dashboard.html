@@ -3,37 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <title>Panel pacjenta</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/dashboard.css">
 </head>
-<body>
+<body class="dashboard-page patient-page">
 
-<div class="container">
+<div class="dashboard-shell">
 
-    <h1>Panel pacjenta</h1>
+    <header class="dashboard-topbar">
+        <div>
+            <p class="eyebrow">Clinic Appointment System</p>
+            <h1>Panel pacjenta</h1>
+        </div>
 
-    <div id="patientData">Ładowanie danych...</div>
+        <button class="logout-btn" onclick="logout()">Wyloguj</button>
+    </header>
 
-    <hr>
+    <section class="dashboard-grid">
 
-    <h2>Moje wizyty</h2>
-    <div id="appointmentsContainer">
-        Wkrótce tutaj pojawią się wizyty.
-    </div>
+        <aside class="profile-card">
+            <h2>Profil pacjenta</h2>
+            <div id="patientData">Ładowanie danych...</div>
+        </aside>
 
-    <button onclick="logout()">Wyloguj</button>
+        <section class="action-card">
+            <h2>Jak zarezerwować wizytę?</h2>
+            <p class="section-description">
+                Wybierz lekarza z listy, sprawdź wolne terminy i podaj powód wizyty.
+            </p>
 
+            <div class="info-list">
+                <div>
+                    <strong>1</strong>
+                    <span>Wybierz lekarza</span>
+                </div>
+                <div>
+                    <strong>2</strong>
+                    <span>Sprawdź dostępne terminy</span>
+                </div>
+                <div>
+                    <strong>3</strong>
+                    <span>Zarezerwuj wizytę</span>
+                </div>
+            </div>
+        </section>
 
-    <h2>Dostępni lekarze</h2>
-    <div id="doctorsContainer"></div>
+    </section>
 
-    <h2>Wolne terminy</h2>
-    <div id="slotsContainer"></div>
+    <section class="content-section">
+        <div class="section-header">
+            <div>
+                <p class="eyebrow">Wizyty</p>
+                <h2>Moje wizyty</h2>
+            </div>
+        </div>
+
+        <div id="appointmentsContainer" class="cards-grid">
+            Ładowanie wizyt...
+        </div>
+    </section>
+
+    <section class="content-section">
+        <div class="section-header">
+            <div>
+                <p class="eyebrow">Lekarze</p>
+                <h2>Dostępni lekarze</h2>
+            </div>
+        </div>
+
+        <div id="doctorsContainer" class="cards-grid"></div>
+    </section>
+
+    <section class="content-section">
+        <div class="section-header">
+            <div>
+                <p class="eyebrow">Terminy</p>
+                <h2>Wolne terminy</h2>
+            </div>
+        </div>
+
+        <div id="slotsContainer" class="cards-grid"></div>
+    </section>
+
 </div>
 
-<script src="/js/config.js"></script>
-<script src="/js/api.js"></script>
-<script src="/js/auth.js"></script>
-<script src="/js/patient-dashboard.js"></script>
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/patient-dashboard.js"></script>
 
 </body>
 </html>

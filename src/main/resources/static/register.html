@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Rejestracja</title>
+
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+<body class="login-body">
+
+<div class="login-wrapper">
+
+    <a href="/ZapisyDoLekarza" class="back-link">← Powrót na stronę główną</a>
+
+    <div class="container">
+        <h1>Rejestracja</h1>
+
+        <div class="register-tabs">
+            <button type="button" id="patientTab" class="tab-btn active">
+                Pacjent
+            </button>
+
+            <button type="button" id="doctorTab" class="tab-btn">
+                Lekarz
+            </button>
+        </div>
+
+        <form id="registerForm">
+            <div>
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="Wpisz email" required>
+            </div>
+
+            <div>
+                <label for="password">Hasło</label>
+                <input type="password" id="password" placeholder="Wpisz hasło" required>
+            </div>
+
+            <div>
+                <label for="firstName">Imię</label>
+                <input type="text" id="firstName" placeholder="Wpisz imię" required>
+            </div>
+
+            <div>
+                <label for="lastName">Nazwisko</label>
+                <input type="text" id="lastName" placeholder="Wpisz nazwisko" required>
+            </div>
+
+            <div id="patientFields">
+                <div>
+                    <label for="pesel">Pesel</label>
+                    <input type="text" id="pesel" placeholder="Wpisz PESEL">
+                </div>
+
+                <div>
+                    <label for="phone">Telefon</label>
+                    <input type="text" id="phone" placeholder="Wpisz numer telefonu">
+                </div>
+            </div>
+
+            <div id="doctorFields" class="hidden">
+                <div>
+                    <label for="specialization">Specjalizacja</label>
+                    <input type="text" id="specialization" placeholder="Np. Kardiolog">
+                </div>
+
+                <p class="pending-info">
+                    Konto lekarza będzie wymagało zatwierdzenia przez administratora.
+                </p>
+            </div>
+
+            <button type="submit">Utwórz konto</button>
+        </form>
+
+        <p class="auth-switch">
+            Masz już konto?
+            <a href="/login.html">Zaloguj się</a>
+        </p>
+
+        <p id="registerMessage"></p>
+    </div>
+
+</div>
+
+<script src="/js/config.js"></script>
+<script src="/js/register.js"></script>
+
+</body>
+</html>

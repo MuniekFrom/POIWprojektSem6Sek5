@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Panel administratora</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/dashboard.css">
 </head>
-<body>
+<body class="dashboard-page admin-page">
 
 <div class="container">
     <h1>Panel administratora</h1>
@@ -16,11 +17,34 @@
 
     <h2>Zarządzanie systemem</h2>
     <hr>
+    <section class="content-section">
+        <div class="section-header">
+            <div>
+                <p class="eyebrow">Rejestracja lekarzy</p>
+                <h2>Oczekujący lekarze</h2>
+            </div>
+        </div>
+
+        <div id="pendingDoctorsContainer" class="cards-grid">
+            Ładowanie oczekujących lekarzy...
+        </div>
+    </section>
 
     <h2>Użytkownicy</h2>
     <div id="usersContainer">Ładowanie użytkowników...</div>
 
     <h2>Wizyty w systemie</h2>
+    <div class="filter-box">
+        <label for="appointmentStatusFilter">
+            <strong>Filtr wizyt:</strong>
+        </label>
+
+        <select id="appointmentStatusFilter">
+            <option value="ALL">Wszystkie</option>
+            <option value="BOOKED">Aktualne</option>
+            <option value="CANCELLED">Anulowane</option>
+        </select>
+    </div>
     <div id="appointmentsContainer">Ładowanie wizyt...</div>
 
     <h2>Statystyki systemu</h2>
@@ -28,6 +52,8 @@
 
     <button onclick="logout()">Wyloguj</button>
 </div>
+
+
 
 <script src="/js/config.js"></script>
 <script src="/js/api.js"></script>

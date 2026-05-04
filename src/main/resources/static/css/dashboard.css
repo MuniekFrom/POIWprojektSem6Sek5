@@ -1,0 +1,454 @@
+.dashboard-page {
+    min-height: 100vh;
+    margin: 0;
+    padding: 32px;
+    color: #0f172a;
+    background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.18), transparent 30%),
+        linear-gradient(180deg, #eef4ff 0%, #f8fafc 100%);
+}
+
+.dashboard-shell {
+    max-width: 1240px;
+    margin: 0 auto;
+}
+
+.dashboard-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 28px;
+    padding: 28px 32px;
+    border-radius: 28px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 20px 55px rgba(15, 23, 42, 0.08);
+    backdrop-filter: blur(12px);
+}
+
+.dashboard-topbar h1 {
+    margin: 0;
+    font-size: clamp(34px, 5vw, 56px);
+    letter-spacing: -1.8px;
+}
+
+.eyebrow {
+    margin: 0 0 8px;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+}
+
+.logout-btn {
+    width: auto;
+    min-width: 130px;
+    padding: 12px 20px;
+    border-radius: 999px;
+    background: #0f172a;
+    color: white;
+    box-shadow: none;
+}
+
+.logout-btn:hover {
+    background: #1e293b;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 22px;
+    margin-bottom: 26px;
+}
+
+.profile-card,
+.action-card,
+.content-section {
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid #e5e7eb;
+    border-radius: 28px;
+    padding: 28px;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.07);
+    backdrop-filter: blur(10px);
+}
+
+.profile-card h2,
+.action-card h2,
+.content-section h2 {
+    margin: 0 0 18px;
+    font-size: 28px;
+    letter-spacing: -0.8px;
+}
+
+.section-description {
+    margin: -8px 0 22px;
+    color: #64748b;
+    line-height: 1.7;
+}
+
+#doctorData,
+#patientData,
+#adminData {
+    background: linear-gradient(135deg, #f8fbff, #f8fafc);
+    border: 1px solid #dbeafe;
+    border-radius: 22px;
+    padding: 20px;
+}
+
+#doctorData p,
+#patientData p,
+#adminData p {
+    margin: 12px 0;
+    font-size: 16px;
+    line-height: 1.55;
+}
+
+form div {
+    margin-bottom: 16px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 800;
+    color: #334155;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 14px 15px;
+    border: 1px solid #cbd5e1;
+    border-radius: 15px;
+    font-size: 15px;
+    outline: none;
+    background: #fff;
+    transition: 0.2s ease;
+}
+
+input:focus,
+select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+button {
+    width: 100%;
+    padding: 14px 16px;
+    border: none;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.2s ease;
+    box-shadow: 0 12px 26px rgba(37, 99, 235, 0.22);
+}
+
+button:hover {
+    transform: translateY(-1px);
+    background: linear-gradient(135deg, #1d4ed8, #1e40af);
+}
+
+.delete-btn {
+    margin-top: 14px;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    box-shadow: 0 12px 26px rgba(220, 38, 38, 0.20);
+}
+
+.delete-btn:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+}
+
+#slotForm {
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    padding: 22px;
+    border-radius: 22px;
+}
+
+#slotMessage {
+    margin: 12px 0 0;
+    font-weight: 800;
+    color: #166534;
+}
+
+.content-section {
+    margin-top: 22px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 18px;
+}
+
+.cards-grid,
+#slotsContainer,
+#appointmentsContainer,
+#usersContainer,
+#doctorsContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 18px;
+}
+
+.slot-card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+    padding: 22px;
+    border-radius: 24px;
+    background: white;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.05);
+    transition: 0.2s ease;
+}
+
+.slot-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 5px;
+    background: #2563eb;
+}
+
+.patient-page .slot-card::before {
+    background: #0f766e;
+}
+
+.admin-page .slot-card::before {
+    background: #7c3aed;
+}
+
+.slot-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 38px rgba(15, 23, 42, 0.08);
+}
+
+.slot-card p {
+    margin: 10px 0;
+    padding-left: 6px;
+    line-height: 1.55;
+    font-size: 16px;
+}
+
+.info-list {
+    display: grid;
+    gap: 14px;
+}
+
+.info-list div {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px;
+    border-radius: 18px;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+}
+
+.info-list strong {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #2563eb;
+    color: white;
+}
+
+.patient-page .info-list strong {
+    background: #0f766e;
+}
+
+.status-booked {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background-color: #dcfce7;
+    color: #166534;
+    font-weight: 800;
+    font-size: 13px;
+}
+
+.status-cancelled {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background-color: #fee2e2;
+    color: #991b1b;
+    font-weight: 800;
+    font-size: 13px;
+}
+
+.cancelled-info {
+    color: #991b1b;
+    font-weight: 800;
+    margin-top: 12px;
+}
+
+.filter-box {
+    margin: 16px 0 22px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.filter-box label {
+    margin: 0;
+}
+
+.filter-box select {
+    width: auto;
+    min-width: 200px;
+}
+
+.doctor-page .dashboard-topbar h1 {
+    color: #1d4ed8;
+}
+
+.patient-page .dashboard-topbar h1 {
+    color: #0f766e;
+}
+
+.admin-page .dashboard-topbar h1 {
+    color: #7c3aed;
+}
+
+.patient-page #patientData {
+    border-color: #99f6e4;
+    background: linear-gradient(135deg, #f0fdfa, #f8fafc);
+}
+
+.admin-page #adminData {
+    border-color: #ddd6fe;
+    background: linear-gradient(135deg, #f5f3ff, #f8fafc);
+}
+
+#statsContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+}
+
+#errorMessage {
+    color: #dc2626;
+    margin-top: 16px;
+    text-align: center;
+    font-weight: 800;
+}
+
+@media (max-width: 900px) {
+    .dashboard-page {
+        padding: 20px;
+    }
+
+    .dashboard-topbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .logout-btn {
+        width: 100%;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .dashboard-page {
+        padding: 12px;
+    }
+
+    .dashboard-topbar,
+    .profile-card,
+    .action-card,
+    .content-section {
+        border-radius: 22px;
+        padding: 20px;
+    }
+
+    .cards-grid,
+    #slotsContainer,
+    #appointmentsContainer,
+    #usersContainer,
+    #doctorsContainer,
+    #statsContainer {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-box {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .filter-box select {
+        width: 100%;
+    }
+}
+
+.status-pending {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background-color: #fef3c7;
+    color: #92400e;
+    font-weight: 800;
+    font-size: 13px;
+}
+
+.action-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 14px;
+    align-items: stretch;
+}
+
+.action-buttons .approve-btn,
+.action-buttons .delete-btn {
+    height: 56px;
+    min-height: 56px;
+    margin: 0;
+    padding: 0 16px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.approve-btn {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    box-shadow: 0 12px 26px rgba(22, 163, 74, 0.20);
+}
+
+.approve-btn:hover {
+    background: linear-gradient(135deg, #16a34a, #15803d);
+}
+
+.action-buttons .delete-btn {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    box-shadow: 0 12px 26px rgba(220, 38, 38, 0.20);
+}
+
+.action-buttons .delete-btn:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+}
+
+.status-available {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background-color: #dbeafe;
+    color: #1d4ed8;
+    font-weight: 800;
+    font-size: 13px;
+}

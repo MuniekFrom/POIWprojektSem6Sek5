@@ -100,7 +100,12 @@ async function loadDoctorSlots() {
                 <p><strong>ID:</strong> ${slot.id}</p>
                 <p><strong>Start:</strong> ${formatDate(slot.startTime)}</p>
                 <p><strong>Koniec:</strong> ${formatDate(slot.endTime)}</p>
-                <p><strong>Status:</strong> ${slot.status}</p>
+                <p>
+                    <strong>Status:</strong>
+                    <span class="${slot.status === "BOOKED" ? "status-booked" : "status-available"}">
+                        ${translateStatus(slot.status)}
+                    </span>
+                </p>
 
                 ${slot.status === "AVAILABLE"
                     ? `<button class="delete-btn" onclick="deleteSlot(${slot.id})">Usuń</button>`
@@ -223,5 +228,18 @@ async function deleteSlot(slotId) {
 
     } catch (error) {
         alert(error.message);
+    }
+}
+
+function translateStatus(status) {
+    switch (status) {
+        case "BOOKED":
+            return "Zarezerwowany";
+        case "AVAILABLE":
+            return "Dostępny";
+        case "CANCELLED":
+            return "Anulowany";
+        default:
+            return status;
     }
 }

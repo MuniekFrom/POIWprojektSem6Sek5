@@ -1,5 +1,7 @@
 package com.clinic.model;
 
+import com.clinic.model.enums.Role;
+import com.clinic.model.enums.UserStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
@@ -22,12 +24,24 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserStatus status = UserStatus.ACTIVE;
+
     public User() {}
 
     public User(String email, String password, Role role) {
         this.email = email;
         this.password = password;
         this.role = role;
+    }
+
+    public UserStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(UserStatus status) {
+        this.status = status;
     }
 
     public Long getId() {

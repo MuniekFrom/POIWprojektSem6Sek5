@@ -5,7 +5,7 @@ import com.clinic.dto.CreateAppointmentSlotRequest;
 import com.clinic.exception.BusinessValidationException;
 import com.clinic.exception.ResourceNotFoundException;
 import com.clinic.model.AppointmentSlot;
-import com.clinic.model.AppointmentSlotStatus;
+import com.clinic.model.enums.AppointmentSlotStatus;
 import com.clinic.model.Doctor;
 import com.clinic.repository.AppointmentSlotRepository;
 import com.clinic.repository.DoctorRepository;

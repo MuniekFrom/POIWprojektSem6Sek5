@@ -6,6 +6,8 @@ import com.clinic.dto.AppointmentSlotResponse;
 import com.clinic.exception.BusinessValidationException;
 import com.clinic.exception.ResourceNotFoundException;
 import com.clinic.model.*;
+import com.clinic.model.enums.AppointmentSlotStatus;
+import com.clinic.model.enums.AppointmentStatus;
 import com.clinic.repository.AppointmentRepository;
 import com.clinic.repository.AppointmentSlotRepository;
 import com.clinic.repository.PatientRepository;
@@ -44,7 +46,7 @@ public class AppointmentService {
             throw new BusinessValidationException("Slot is already booked");
         }
 
-        if (appointmentRepository.existsByAppointmentSlotId(slot.getId())) {
+        if (appointmentRepository.existsByAppointmentSlotIdAndStatus(slot.getId(), AppointmentStatus.BOOKED)) {
             throw new BusinessValidationException("Appointment already exists for this slot");
         }
 
@@ -58,6 +60,7 @@ public class AppointmentService {
         appointment.setPatient(patient);
         appointment.setBookedAt(LocalDateTime.now());
         appointment.setReason(request.getReason());
+        appointment.setStatus(AppointmentStatus.BOOKED);
 
         slot.setStatus(AppointmentSlotStatus.BOOKED);
         appointmentSlotRepository.save(slot);
@@ -74,9 +77,8 @@ public class AppointmentService {
                         "Patient not found for email: " + email
                 ));
 
-        return appointmentRepository.findByPatientId(patient.getId())
+        return appointmentRepository.findByPatientIdAndStatus(patient.getId(), AppointmentStatus.BOOKED)
                 .stream()
-                .filter(appointment -> appointment.getAppointmentSlot().getStatus() == AppointmentSlotStatus.BOOKED)
                 .map(this::mapToAppointmentResponse)
                 .collect(Collectors.toList());
     }
@@ -110,12 +112,17 @@ public class AppointmentService {
             throw new BusinessValidationException("You can cancel only your own appointments");
         }
 
+        if (appointment.getStatus() == AppointmentStatus.CANCELLED) {
+            throw new BusinessValidationException("Appointment is already cancelled");
+        }
+
         AppointmentSlot slot = appointment.getAppointmentSlot();
+
+        appointment.setStatus(AppointmentStatus.CANCELLED);
         slot.setStatus(AppointmentSlotStatus.AVAILABLE);
 
         appointmentSlotRepository.save(slot);
-
-        // appointmentRepository.delete(appointment);
+        appointmentRepository.save(appointment);
     }
 
     private AppointmentResponse mapToAppointmentResponse(Appointment appointment) {
@@ -130,14 +137,13 @@ public class AppointmentService {
                 appointment.getAppointmentSlot().getEndTime(),
                 appointment.getBookedAt(),
                 appointment.getReason(),
-                appointment.getAppointmentSlot().getStatus().name()
+                appointment.getStatus().name()
         );
     }
 
     public List<AppointmentResponse> getAllAppointments() {
         return appointmentRepository.findAll()
                 .stream()
-                .filter(appointment -> appointment.getAppointmentSlot().getStatus() == AppointmentSlotStatus.BOOKED)
                 .map(this::mapToAppointmentResponse)
                 .collect(Collectors.toList());
     }
@@ -148,13 +154,17 @@ public class AppointmentService {
                         "Appointment not found with id: " + appointmentId
                 ));
 
+        if (appointment.getStatus() == AppointmentStatus.CANCELLED) {
+            throw new BusinessValidationException("Appointment is already cancelled");
+        }
+
         AppointmentSlot slot = appointment.getAppointmentSlot();
+
+        appointment.setStatus(AppointmentStatus.CANCELLED);
         slot.setStatus(AppointmentSlotStatus.AVAILABLE);
 
         appointmentSlotRepository.save(slot);
-
-
-        // appointmentRepository.delete(appointment);
+        appointmentRepository.save(appointment);
     }
 
     public void deleteUserByAdmin(Long userId, String adminEmail) {
@@ -170,6 +180,8 @@ public class AppointmentService {
 
         userRepository.delete(user);
     }
+
+
 
 
 

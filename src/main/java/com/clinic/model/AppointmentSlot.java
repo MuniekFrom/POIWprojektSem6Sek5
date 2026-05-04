@@ -1,8 +1,9 @@
 package com.clinic.model;
 
+import com.clinic.model.enums.AppointmentSlotStatus;
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class AppointmentSlot {
@@ -20,10 +21,6 @@ public class AppointmentSlot {
 
     @Enumerated(EnumType.STRING)
     private AppointmentSlotStatus status;
-
-    @OneToOne(mappedBy = "appointmentSlot")
-    @JsonIgnore
-    private Appointment appointment;
 
     public AppointmentSlot() {
     }
@@ -69,14 +66,6 @@ public class AppointmentSlot {
 
     public void setStatus(AppointmentSlotStatus status) {
         this.status = status;
-    }
-
-    public Appointment getAppointment() {
-        return appointment;
-    }
-
-    public void setAppointment(Appointment appointment) {
-        this.appointment = appointment;
     }
 
     public void book() {

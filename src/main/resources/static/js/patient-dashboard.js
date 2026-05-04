@@ -67,7 +67,12 @@ async function loadPatientAppointments() {
                 <p><strong>Start:</strong> ${formatDate(appointment.startTime)}</p>
                 <p><strong>Koniec:</strong> ${formatDate(appointment.endTime)}</p>
                 <p><strong>Powód:</strong> ${appointment.reason}</p>
-                <p><strong>Status:</strong> ${appointment.status}</p>
+                <p>
+                    <strong>Status:</strong>
+                    <span class="${appointment.status === "BOOKED" ? "status-booked" : "status-cancelled"}">
+                        ${translateStatus(appointment.status)}
+                    </span>
+                </p>
 
                 <button class="delete-btn"
                     onclick="cancelAppointment(${appointment.id})">
@@ -181,7 +186,7 @@ async function loadAvailableSlots(doctorId) {
                 <p><strong>Specjalizacja:</strong> ${slot.specialization}</p>
                 <p><strong>Start:</strong> ${formatDate(slot.startTime)}</p>
                 <p><strong>Koniec:</strong> ${formatDate(slot.endTime)}</p>
-                <p><strong>Status:</strong> ${slot.status}</p>
+                <p><strong>Status:</strong> ${translateStatus(slot.status)}</p>
 
                 <input type="text" id="reason-${slot.id}" placeholder="Powód wizyty">
 
@@ -241,3 +246,23 @@ async function bookAppointment(slotId) {
                 alert(error.message);
             }
 }
+
+function translateStatus(status) {
+    switch (status) {
+        case "BOOKED":
+            return "Zarezerwowana";
+        case "CANCELLED":
+            return "Anulowana";
+        case "AVAILABLE":
+            return "Dostępny";
+        case "PENDING":
+            return "Oczekuje";
+        case "ACTIVE":
+            return "Aktywne";
+        case "REJECTED":
+            return "Odrzucone";
+        default:
+            return status;
+    }
+}
+

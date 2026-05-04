@@ -1,7 +1,7 @@
 package com.clinic.repository;
 
 import com.clinic.model.AppointmentSlot;
-import com.clinic.model.AppointmentSlotStatus;
+import com.clinic.model.enums.AppointmentSlotStatus;
 import com.clinic.model.Doctor;
 import org.springframework.data.jpa.repository.JpaRepository;
 
