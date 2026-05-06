@@ -2,153 +2,142 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Zapisy do lekarza</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZapisyDoLekarza — System rezerwacji wizyt</title>
+
+    <link rel="preload" as="image" href="/images/alpine-hero-wide.png">
+    <link rel="preload" as="image" href="/images/alpine-entrance.png">
+    <link rel="preload" as="image" href="/images/alpine-reception.png">
+    <link rel="preload" as="image" href="/images/alpine-office.png">
 
     <link rel="stylesheet" href="/css/common.css">
     <link rel="stylesheet" href="/css/landing.css">
 </head>
-<body class="landing-body">
 
-<header class="landing-header">
-    <a href="/ZapisyDoLekarza" class="landing-logo">
-        <span class="logo-icon">+</span>
-        <span>ZapisyDoLekarza</span>
+<body class="alpine-body">
+
+<div id="scrollProgress" aria-hidden="true"></div>
+
+<header class="site-header" id="siteHeader">
+    <a href="/index.html" class="brand">
+        <span class="brand-mark" aria-hidden="true">+</span>
+        <span class="brand-text">ZapisyDoLekarza</span>
     </a>
 
-    <nav class="landing-nav">
-        <a href="#features">Funkcje</a>
-        <a href="#roles">Role</a>
-        <a href="login.html" class="primary-btn">Zaloguj się</a>
-        <a href="register.html" class="secondary-btn">Zarejestruj się</a>
+    <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+    </button>
+
+    <nav class="top-nav" id="topNav">
+        <a href="#" data-jump="0">Start</a>
+        <a href="#" data-jump="2">Pacjent</a>
+        <a href="#" data-jump="3">Lekarz</a>
+        <a href="/login.html" class="header-login">Zaloguj się</a>
     </nav>
 </header>
 
 <main>
+    <section class="cinematic-experience" id="experience">
+        <div class="stage-shell">
+            <div class="scene scene-hero" data-scene="0"></div>
+            <div class="scene scene-entrance" data-scene="1"></div>
+            <div class="scene scene-reception" data-scene="2"></div>
+            <div class="scene scene-office" data-scene="3"></div>
 
-    <section class="hero-section">
-        <div class="hero-content">
-            <p class="hero-badge">System rezerwacji wizyt online</p>
+            <div class="atmosphere atmosphere-left"></div>
+            <div class="atmosphere atmosphere-right"></div>
+            <div class="cinematic-shade"></div>
+            <div class="final-backdrop" id="finalBackdrop"></div>
 
-            <h1>Umów wizytę lekarską w prosty sposób</h1>
+            <div class="stage-content">
+                <article class="copy-block copy-hero is-active" data-step="0">
+                    <p class="kicker">01 / System rezerwacji</p>
+                    <h1>Umów wizytę lekarską<br>w prosty sposób</h1>
+                    <p class="lead">
+                        Aplikacja umożliwia pacjentom szybkie zakładanie konta, logowanie
+                        oraz rezerwowanie wizyt u wybranych lekarzy w dostępnych terminach.
+                    </p>
+                    <p class="scroll-note">Przewiń, aby poznać funkcje systemu</p>
+                </article>
 
-            <p>
-                Wybierz lekarza, sprawdź dostępne terminy i zarezerwuj wizytę online.
-                System ułatwia pacjentom umawianie wizyt, a lekarzom zarządzanie
-                swoim harmonogramem.
-            </p>
+                <article class="copy-block copy-entrance" data-step="1">
+                    <p class="kicker">02 / Jak działa system</p>
+                    <h2>Prosty proces<br>od konta do wizyty</h2>
+                    <p class="lead">
+                        Użytkownik wybiera swoją rolę, uzupełnia dane, loguje się do panelu,
+                        a następnie korzysta z funkcji dopasowanych do pacjenta, lekarza
+                        lub administratora.
+                    </p>
+                </article>
 
-            <div class="hero-actions">
-                <a href="login.html" class="primary-btn">Przejdź do logowania</a>
-                <a href="register.html" class="secondary-btn">Utwórz konto</a>
-                <a href="#features" class="secondary-btn">Zobacz jak działa</a>
+                <article class="role-panel patient-panel" id="patient-actions" data-step="2">
+                    <p class="kicker">03 / Panel pacjenta</p>
+                    <h2>Rezerwacja wizyt</h2>
+                    <p>
+                        Pacjent może utworzyć konto, zalogować się, sprawdzić dostępnych lekarzy,
+                        wybrać termin wizyty oraz zarządzać swoimi rezerwacjami online.
+                    </p>
+                    <div class="panel-actions">
+                        <a href="/login.html" class="panel-btn panel-btn-light">
+                            <span>Zaloguj się jako pacjent</span><strong>→</strong>
+                        </a>
+                        <a href="/register.html?role=patient" class="panel-btn panel-btn-outline">
+                            <span>Zarejestruj się jako pacjent</span><strong>→</strong>
+                        </a>
+                    </div>
+                </article>
+
+                <article class="role-panel doctor-panel" id="doctor-actions" data-step="3">
+                    <p class="kicker">04 / Panel lekarza</p>
+                    <h2>Zarządzanie grafikiem</h2>
+                    <p>
+                        Lekarz może dodawać dostępne terminy wizyt, kontrolować swój harmonogram
+                        oraz obsługiwać zapisy pacjentów z poziomu własnego panelu.
+                    </p>
+                    <div class="panel-actions">
+                        <a href="/login.html" class="panel-btn panel-btn-light">
+                            <span>Zaloguj się jako lekarz</span><strong>→</strong>
+                        </a>
+                        <a href="/register.html?role=doctor" class="panel-btn panel-btn-outline">
+                            <span>Zarejestruj się jako lekarz</span><strong>→</strong>
+                        </a>
+                    </div>
+                </article>
+
+                <article class="role-panel quick-panel" id="quick-actions" data-step="4">
+                    <p class="kicker">05 / Dostęp do systemu</p>
+                    <h2>Wybierz dostęp<br>do swojego panelu</h2>
+                    <p>
+                        Zaloguj się do istniejącego konta albo zarejestruj się jako pacjent lub lekarz.
+                        Po zalogowaniu system przekieruje Cię do odpowiedniego panelu użytkownika.
+                    </p>
+                    <div class="quick-grid">
+                        <a href="/login.html" class="quick-link primary">Logowanie</a>
+                        <a href="/register.html?role=patient" class="quick-link">Rejestracja pacjenta</a>
+                        <a href="/register.html?role=doctor" class="quick-link">Rejestracja lekarza</a>
+                    </div>
+                </article>
             </div>
-        </div>
 
-        <div class="hero-panel">
-            <div class="steps-card">
-                <h2>Jak działa system?</h2>
+            <aside class="step-rail">
+                <span class="rail-dot is-active" data-dot="0"><em>Start</em></span>
+                <span class="rail-dot" data-dot="1"><em>Działanie</em></span>
+                <span class="rail-dot" data-dot="2"><em>Pacjent</em></span>
+                <span class="rail-dot" data-dot="3"><em>Lekarz</em></span>
+                <span class="rail-dot" data-dot="4"><em>Dostęp</em></span>
+            </aside>
 
-                <div class="step-item">
-                    <span>1</span>
-                    <div>
-                        <strong>Wybierz lekarza</strong>
-                        <p>Pacjent może sprawdzić dostępnych lekarzy i ich specjalizacje.</p>
-                    </div>
-                </div>
-
-                <div class="step-item">
-                    <span>2</span>
-                    <div>
-                        <strong>Sprawdź wolne terminy</strong>
-                        <p>System pokazuje tylko dostępne sloty wybranego lekarza.</p>
-                    </div>
-                </div>
-
-                <div class="step-item">
-                    <span>3</span>
-                    <div>
-                        <strong>Zarezerwuj wizytę</strong>
-                        <p>Po rezerwacji termin zostaje przypisany do pacjenta.</p>
-                    </div>
-                </div>
+            <div class="final-caption" id="finalCaption">
+                Szybkie umawianie wizyt i wygodne zarządzanie terminami
             </div>
         </div>
     </section>
-
-    <section id="features" class="features-section">
-        <div class="section-title">
-            <p class="hero-badge">Możliwości</p>
-            <h2>Najważniejsze funkcje systemu</h2>
-        </div>
-
-        <div class="features-grid">
-            <div class="feature-card">
-                <span class="feature-icon">🔎</span>
-                <h3>Wybór lekarza</h3>
-                <p>Pacjent może sprawdzić listę lekarzy i wybrać odpowiednią specjalizację.</p>
-            </div>
-
-            <div class="feature-card">
-                <span class="feature-icon">📅</span>
-                <h3>Wolne terminy</h3>
-                <p>System pokazuje dostępne godziny wizyt utworzone przez lekarza.</p>
-            </div>
-
-            <div class="feature-card">
-                <span class="feature-icon">✅</span>
-                <h3>Rezerwacja wizyty</h3>
-                <p>Pacjent może zarezerwować termin i podać powód wizyty.</p>
-            </div>
-
-            <div class="feature-card">
-                <span class="feature-icon">↩️</span>
-                <h3>Anulowanie wizyty</h3>
-                <p>Wizytę można anulować, a termin wraca do dostępnych dla innych pacjentów.</p>
-            </div>
-
-            <div class="feature-card">
-                <span class="feature-icon">🩺</span>
-                <h3>Panel lekarza</h3>
-                <p>Lekarz może dodawać i usuwać swoje dostępne terminy.</p>
-            </div>
-
-            <div class="feature-card">
-                <span class="feature-icon">⚙️</span>
-                <h3>Panel administratora</h3>
-                <p>Administrator zarządza użytkownikami, wizytami oraz statystykami systemu.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="roles" class="roles-section">
-        <div class="section-title">
-            <p class="hero-badge">Role użytkowników</p>
-            <h2>Trzy panele dopasowane do potrzeb systemu</h2>
-        </div>
-
-        <div class="roles-grid">
-            <div class="role-card patient-role">
-                <h3>Pacjent</h3>
-                <p>Rezerwuje wizyty, przegląda dostępnych lekarzy i anuluje swoje terminy.</p>
-            </div>
-
-            <div class="role-card doctor-role">
-                <h3>Lekarz</h3>
-                <p>Zarządza własnymi slotami i kontroluje dostępność terminów.</p>
-            </div>
-
-            <div class="role-card admin-role">
-                <h3>Administrator</h3>
-                <p>Ma dostęp do użytkowników, wszystkich wizyt i statystyk systemu.</p>
-            </div>
-        </div>
-    </section>
-
 </main>
 
-<footer class="landing-footer">
-    <p>ZapisyDoLekarza — szybkie umawianie wizyt i wygodne zarządzanie terminami</p>
-</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="/js/landing.js"></script>
 
 </body>
 </html>

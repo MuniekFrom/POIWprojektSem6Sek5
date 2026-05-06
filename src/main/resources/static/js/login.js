@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     console.log("login.js działa");
 
-    if (isLoggedIn()) {
+    if (typeof isLoggedIn === "function" && isLoggedIn()) {
         redirectByRole();
         return;
     }
@@ -14,35 +14,32 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        console.log("Kliknięto Zaloguj");
+    form.addEventListener("submit", async event => {
+        event.preventDefault();
 
         error.textContent = "";
 
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
 
         try {
             const data = await apiRequest("/auth/login", {
                 method: "POST",
                 body: JSON.stringify({
-                    email: email,
-                    password: password
+                    email,
+                    password
                 })
             });
 
             console.log("Zalogowano jako:", data.role);
 
             saveAuthData(data.token, data.role);
-
             redirectByRole();
 
         } catch (err) {
             console.error("Błąd logowania:", err);
             error.textContent = translateLoginError(err.message);
-            }
+        }
     });
 });
 

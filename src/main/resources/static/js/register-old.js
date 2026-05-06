@@ -3,21 +3,18 @@ let selectedRole = "PATIENT";
 document.addEventListener("DOMContentLoaded", () => {
     const patientTab = document.getElementById("patientTab");
     const doctorTab = document.getElementById("doctorTab");
+
     const patientFields = document.getElementById("patientFields");
     const doctorFields = document.getElementById("doctorFields");
+
     const form = document.getElementById("registerForm");
     const message = document.getElementById("registerMessage");
-    const submitBtn = document.getElementById("submitBtn");
 
-    if (!patientTab || !doctorTab || !form) {
-        return;
-    }
-
-    function activatePatient() {
+    patientTab.addEventListener("click", () => {
         selectedRole = "PATIENT";
 
-        patientTab.classList.add("active", "patient");
-        doctorTab.classList.remove("active", "doctor");
+        patientTab.classList.add("active");
+        doctorTab.classList.remove("active");
 
         patientFields.classList.remove("hidden");
         doctorFields.classList.add("hidden");
@@ -26,17 +23,15 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("phone").required = true;
         document.getElementById("specialization").required = false;
 
-        submitBtn.classList.add("patient-active");
-
         message.textContent = "";
         message.className = "";
-    }
+    });
 
-    function activateDoctor() {
+    doctorTab.addEventListener("click", () => {
         selectedRole = "DOCTOR";
 
-        doctorTab.classList.add("active", "doctor");
-        patientTab.classList.remove("active", "patient");
+        doctorTab.classList.add("active");
+        patientTab.classList.remove("active");
 
         doctorFields.classList.remove("hidden");
         patientFields.classList.add("hidden");
@@ -45,31 +40,15 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("phone").required = false;
         document.getElementById("specialization").required = true;
 
-        submitBtn.classList.remove("patient-active");
+        message.textContent = "";
+        message.className = "";
+    });
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
         message.textContent = "";
         message.className = "";
-    }
-
-    patientTab.addEventListener("click", activatePatient);
-    doctorTab.addEventListener("click", activateDoctor);
-
-    const roleParam = new URLSearchParams(window.location.search).get("role");
-
-    if (roleParam && roleParam.toLowerCase() === "doctor") {
-        activateDoctor();
-    } else {
-        activatePatient();
-    }
-
-    form.addEventListener("submit", async event => {
-        event.preventDefault();
-
-        message.textContent = "";
-        message.className = "";
-
-        submitBtn.textContent = "Trwa rejestracja…";
-        submitBtn.disabled = true;
 
         const email = document.getElementById("email").value.trim();
         const password = document.getElementById("password").value.trim();
@@ -115,42 +94,36 @@ document.addEventListener("DOMContentLoaded", () => {
                 let errorMessage = "Nie udało się utworzyć konta.";
 
                 try {
-                    const data = await response.json();
-                    errorMessage = translateRegisterError(data.message) || errorMessage;
-                } catch (error) {}
+                    const errorData = await response.json();
+                    errorMessage = translateError(errorData.message) || errorMessage;
+                } catch (e) {
+                }
 
                 throw new Error(errorMessage);
             }
 
-            message.textContent = selectedRole === "PATIENT"
-                ? "✅ Konto pacjenta zostało utworzone. Możesz się teraz zalogować."
-                : "✅ Zgłoszenie wysłane. Konto oczekuje na zatwierdzenie przez administratora.";
+            if (selectedRole === "PATIENT") {
+                message.textContent = "Konto pacjenta zostało utworzone. Możesz się zalogować.";
+            } else {
+                message.textContent = "Zgłoszenie lekarza zostało wysłane. Konto oczekuje na zatwierdzenie przez administratora.";
+            }
 
             message.className = "success-message";
-
             form.reset();
-
-            if (selectedRole === "PATIENT") {
-                activatePatient();
-            } else {
-                activateDoctor();
-            }
 
         } catch (error) {
             message.textContent = error.message;
             message.className = "error-message";
-        } finally {
-            submitBtn.textContent = "Utwórz konto →";
-            submitBtn.disabled = false;
         }
     });
 });
 
-function translateRegisterError(message) {
+function translateError(message) {
     switch (message) {
         case "Email is already used":
-            return "Ten adres email jest już zajęty.";
+            return "Ten adres email jest już używany.";
         default:
             return message;
     }
 }
+

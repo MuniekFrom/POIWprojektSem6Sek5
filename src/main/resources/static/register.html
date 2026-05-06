@@ -2,89 +2,111 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Rejestracja</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rejestracja — ZapisyDoLekarza</title>
 
+    <link rel="preload" as="image" href="/images/alpine-office.png">
     <link rel="stylesheet" href="/css/common.css">
     <link rel="stylesheet" href="/css/login.css">
 </head>
-<body class="login-body">
 
-<div class="login-wrapper">
+<body class="auth-body register-page">
+<div class="auth-wrapper register-wrapper">
+    <a href="/index.html" class="auth-back-link">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Powrót
+    </a>
 
-    <a href="/ZapisyDoLekarza" class="back-link">← Powrót na stronę główną</a>
+    <div class="auth-card register-card">
+        <div class="auth-logo">
+            <div class="auth-logo-mark">+</div>
+            <div>
+                <div class="auth-logo-text">ZapisyDoLekarza</div>
+                <div class="auth-logo-sub">Utwórz nowe konto</div>
+            </div>
+        </div>
 
-    <div class="container">
-        <h1>Rejestracja</h1>
+        <h1>Dołącz do systemu</h1>
+        <p class="auth-subtitle">Wybierz swoją rolę i uzupełnij dane.</p>
 
-        <div class="register-tabs">
-            <button type="button" id="patientTab" class="tab-btn active">
-                Pacjent
-            </button>
-
-            <button type="button" id="doctorTab" class="tab-btn">
-                Lekarz
-            </button>
+        <div class="tabs">
+            <button type="button" id="patientTab" class="tab-btn active patient">🏥 Pacjent</button>
+            <button type="button" id="doctorTab" class="tab-btn doctor">🩺 Lekarz</button>
         </div>
 
         <form id="registerForm">
-            <div>
-                <label for="email">Email</label>
-                <input type="email" id="email" placeholder="Wpisz email" required>
+            <p class="section-label">Dane konta</p>
+
+            <div class="field">
+                <label for="email">Adres email</label>
+                <input type="email" id="email" placeholder="twoj@email.pl" required autocomplete="email">
             </div>
 
-            <div>
+            <div class="field">
                 <label for="password">Hasło</label>
-                <input type="password" id="password" placeholder="Wpisz hasło" required>
+                <input type="password" id="password" placeholder="Min. 8 znaków" required autocomplete="new-password">
             </div>
 
-            <div>
-                <label for="firstName">Imię</label>
-                <input type="text" id="firstName" placeholder="Wpisz imię" required>
-            </div>
+            <p class="section-label">Dane osobowe</p>
 
-            <div>
-                <label for="lastName">Nazwisko</label>
-                <input type="text" id="lastName" placeholder="Wpisz nazwisko" required>
+            <div class="field-row">
+                <div class="field">
+                    <label for="firstName">Imię</label>
+                    <input type="text" id="firstName" placeholder="Jan" required autocomplete="given-name">
+                </div>
+
+                <div class="field">
+                    <label for="lastName">Nazwisko</label>
+                    <input type="text" id="lastName" placeholder="Kowalski" required autocomplete="family-name">
+                </div>
             </div>
 
             <div id="patientFields">
-                <div>
-                    <label for="pesel">Pesel</label>
-                    <input type="text" id="pesel" placeholder="Wpisz PESEL">
+                <p class="section-label">Dane pacjenta</p>
+
+                <div class="field">
+                    <label for="pesel">PESEL</label>
+                    <input type="text" id="pesel" placeholder="00000000000" autocomplete="off">
                 </div>
 
-                <div>
-                    <label for="phone">Telefon</label>
-                    <input type="text" id="phone" placeholder="Wpisz numer telefonu">
+                <div class="field">
+                    <label for="phone">Numer telefonu</label>
+                    <input type="text" id="phone" placeholder="+48 000 000 000" autocomplete="tel">
                 </div>
             </div>
 
             <div id="doctorFields" class="hidden">
-                <div>
+                <p class="section-label">Dane lekarza</p>
+
+                <div class="field">
                     <label for="specialization">Specjalizacja</label>
-                    <input type="text" id="specialization" placeholder="Np. Kardiolog">
+                    <input type="text" id="specialization" placeholder="np. Kardiolog, Dermatolog…">
                 </div>
 
-                <p class="pending-info">
-                    Konto lekarza będzie wymagało zatwierdzenia przez administratora.
-                </p>
+                <div class="pending-box">
+                    <span class="icon">⏳</span>
+                    <span>Konto lekarza wymaga zatwierdzenia przez administratora przed pierwszym logowaniem.</span>
+                </div>
             </div>
 
-            <button type="submit">Utwórz konto</button>
+            <button type="submit" class="submit-btn patient-active" id="submitBtn">Utwórz konto →</button>
         </form>
 
-        <p class="auth-switch">
-            Masz już konto?
+        <p id="registerMessage"></p>
+
+        <div class="divider"><span>masz już konto?</span></div>
+
+        <p class="switch">
             <a href="/login.html">Zaloguj się</a>
         </p>
-
-        <p id="registerMessage"></p>
     </div>
-
 </div>
 
 <script src="/js/config.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/auth.js"></script>
 <script src="/js/register.js"></script>
-
 </body>
 </html>
