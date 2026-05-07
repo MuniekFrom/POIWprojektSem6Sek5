@@ -574,7 +574,7 @@ h1 {
 .step-rail {
     position: absolute;
     top: 50%;
-    right: 105px;
+    right: 110px;
     z-index: 70;
     transform: translateY(-50%);
     display: flex;
@@ -750,6 +750,7 @@ body.no-gsap .stage-content {
     }
 }
 
+/* Standardowe tablety i mniejsze szerokości */
 @media (max-width: 1000px) {
     .site-header {
         width: calc(100% - 18px);
@@ -778,151 +779,12 @@ body.no-gsap .stage-content {
     }
 
     .step-rail {
-        right: 48px;
+        right: 70px;
     }
 }
-
-@media (max-width: 760px) {
-    .site-header {
-        align-items: flex-start;
-        padding: 12px;
-    }
-
-    .brand {
-        font-size: 19px;
-    }
-
-    .brand-mark {
-        width: 39px;
-        height: 39px;
-    }
-
-    .mobile-menu-btn {
-        display: inline-block;
-        position: absolute;
-        right: 12px;
-        top: 12px;
-    }
-
-    .top-nav {
-        width: 100%;
-        display: none;
-        grid-template-columns: 1fr;
-        gap: 10px;
-        padding-top: 12px;
-    }
-
-    .top-nav.is-open {
-        display: grid;
-    }
-
-    .top-nav a {
-        width: 100%;
-        padding: 12px 14px;
-        border-radius: 14px;
-        background: rgba(255,255,255,.12);
-    }
-
-    .header-login {
-        text-align: center;
-    }
-
-    .stage-content {
-        width: calc(100% - 24px);
-    }
-
-    h1 {
-        font-size: clamp(38px, 12vw, 58px);
-        letter-spacing: -1.7px;
-    }
-
-    .copy-block h2,
-    .role-panel h2,
-    .quick-card h2 {
-        font-size: clamp(31px, 9vw, 46px);
-        letter-spacing: -1.4px;
-    }
-
-    .lead,
-    .copy-block p,
-    .role-panel p,
-    .quick-card p {
-        font-size: 16px;
-        line-height: 1.65;
-    }
-
-    .copy-hero,
-    .copy-entrance {
-        top: 34%;
-    }
-
-    .role-panel {
-        left: 0;
-        right: 0;
-        bottom: 22px;
-        width: 100%;
-        padding: 22px;
-        border-radius: 24px;
-    }
-
-    .quick-panel {
-        left: 50%;
-        top: 50%;
-        width: calc(100% - 24px);
-        padding: 24px 18px;
-        border-radius: 24px;
-        transform: translate(-50%, -50%) translateZ(0);
-    }
-
-    .quick-panel .kicker {
-        font-size: 13px;
-        padding: 10px 14px;
-    }
-
-    .quick-panel .quick-grid {
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    .quick-panel .quick-link {
-        width: 100%;
-        min-width: 0;
-    }
-
-    .intro-actions,
-    .quick-grid {
-        flex-direction: column;
-    }
-
-    .btn,
-    .quick-link {
-        width: 100%;
-    }
-
-    .step-rail {
-        display: none;
-    }
-
-    .final-caption {
-        bottom: 16px;
-        font-size: 12px;
-        padding: 0 12px;
-    }
-
-    .quick-card {
-        padding: 28px 20px;
-        border-radius: 26px;
-    }
-}
-
-
-/* =========================================================
-   RESPONSYWNOŚĆ DLA LAPTOPÓW I MNIEJSZYCH EKRANÓW
-   Poprawia pozycje napisów, paneli i przycisków
-========================================================= */
 
 /* Laptopy z niższym ekranem, np. 1366x768 */
-@media (max-height: 820px) and (min-width: 761px) {
+@media (max-height: 820px) and (min-width: 1001px) {
     .site-header {
         top: 10px;
         min-height: 58px;
@@ -950,12 +812,12 @@ body.no-gsap .stage-content {
 
     .copy-hero,
     .copy-entrance {
-        top: 42%;
+        top: 39%;
         width: min(620px, 100%);
     }
 
     .copy-hero {
-        top: 43%;
+        top: 38%;
     }
 
     h1 {
@@ -1061,8 +923,53 @@ body.no-gsap .stage-content {
     }
 
     .step-rail {
-        right: 72px;
+        right: 125px;
         gap: 20px;
+    }
+}
+
+/* Węższe laptopy / tablety poziomo */
+@media (max-width: 1000px) and (min-width: 761px) {
+    .copy-hero,
+    .copy-entrance {
+        top: 35%;
+        width: min(640px, 100%);
+    }
+
+    .copy-hero {
+        top: 34%;
+    }
+
+    .role-panel {
+        left: auto;
+        right: 24px;
+        bottom: 28px;
+        width: min(430px, calc(100% - 48px));
+        padding: 22px;
+        max-height: calc(100vh - 210px);
+        overflow-y: auto;
+        transform: none;
+    }
+
+    .role-panel h2 {
+        font-size: clamp(30px, 5vw, 46px);
+    }
+
+    .role-panel p {
+        font-size: 15px;
+        line-height: 1.5;
+    }
+
+    .panel-btn {
+        min-height: 52px;
+    }
+
+    .quick-panel {
+        width: min(760px, calc(100% - 42px));
+    }
+
+    .step-rail {
+        right: 90px;
     }
 }
 
@@ -1085,11 +992,11 @@ body.no-gsap .stage-content {
 
     .copy-hero,
     .copy-entrance {
-        top: 40%;
+        top: 37%;
     }
 
     .copy-hero {
-        top: 41%;
+        top: 35%;
     }
 
     h1 {
@@ -1166,55 +1073,58 @@ body.no-gsap .stage-content {
     .final-caption {
         bottom: 12px;
     }
-}
-
-/* Tablety i węższe laptopy */
-@media (max-width: 1000px) and (min-width: 761px) {
-    .copy-hero,
-    .copy-entrance {
-        top: 35%;
-        width: min(640px, 100%);
-    }
-
-    .copy-hero {
-        top: 36%;
-    }
-
-    .role-panel {
-        left: auto;
-        right: 24px;
-        bottom: 28px;
-        width: min(430px, calc(100% - 48px));
-        padding: 22px;
-        max-height: calc(100vh - 210px);
-        overflow-y: auto;
-        transform: none;
-    }
-
-    .role-panel h2 {
-        font-size: clamp(30px, 5vw, 46px);
-    }
-
-    .role-panel p {
-        font-size: 15px;
-        line-height: 1.5;
-    }
-
-    .panel-btn {
-        min-height: 52px;
-    }
-
-    .quick-panel {
-        width: min(760px, calc(100% - 42px));
-    }
 
     .step-rail {
-        right: 42px;
+        right: 120px;
     }
 }
 
 /* Telefony i bardzo małe ekrany */
 @media (max-width: 760px) {
+    .site-header {
+        align-items: flex-start;
+        padding: 12px;
+    }
+
+    .brand {
+        font-size: 19px;
+    }
+
+    .brand-mark {
+        width: 39px;
+        height: 39px;
+    }
+
+    .mobile-menu-btn {
+        display: inline-block;
+        position: absolute;
+        right: 12px;
+        top: 12px;
+    }
+
+    .top-nav {
+        width: 100%;
+        display: none;
+        grid-template-columns: 1fr;
+        gap: 10px;
+        padding-top: 12px;
+    }
+
+    .top-nav.is-open {
+        display: grid;
+    }
+
+    .top-nav a {
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 14px;
+        background: rgba(255,255,255,.12);
+    }
+
+    .header-login {
+        text-align: center;
+    }
+
     .stage-content {
         width: calc(100% - 24px);
     }
@@ -1243,7 +1153,9 @@ body.no-gsap .stage-content {
     }
 
     .lead,
-    .copy-block p {
+    .copy-block p,
+    .role-panel p,
+    .quick-card p {
         font-size: 15px;
         line-height: 1.55;
         max-width: 100%;
@@ -1324,6 +1236,7 @@ body.no-gsap .stage-content {
     .quick-panel .quick-grid {
         margin-top: 18px;
         gap: 10px;
+        flex-direction: column;
     }
 
     .quick-panel .quick-link {
@@ -1333,10 +1246,29 @@ body.no-gsap .stage-content {
         font-size: 13px;
     }
 
+    .intro-actions,
+    .quick-grid {
+        flex-direction: column;
+    }
+
+    .btn,
+    .quick-link {
+        width: 100%;
+    }
+
+    .step-rail {
+        display: none;
+    }
+
     .final-caption {
         bottom: 12px;
         font-size: 11px;
         padding: 0 14px;
+    }
+
+    .quick-card {
+        padding: 28px 20px;
+        border-radius: 26px;
     }
 }
 
