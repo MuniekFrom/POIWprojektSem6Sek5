@@ -750,7 +750,8 @@ body.no-gsap .stage-content {
     }
 }
 
-/* Standardowe tablety i mniejsze szerokości */
+/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+/* Tablety i mniejsze szerokości */
 @media (max-width: 1000px) {
     .site-header {
         width: calc(100% - 18px);
@@ -783,6 +784,7 @@ body.no-gsap .stage-content {
     }
 }
 
+/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 /* Laptopy z niższym ekranem, np. 1366x768 */
 @media (max-height: 820px) and (min-width: 1001px) {
     .site-header {
@@ -928,6 +930,7 @@ body.no-gsap .stage-content {
     }
 }
 
+/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 /* Węższe laptopy / tablety poziomo */
 @media (max-width: 1000px) and (min-width: 761px) {
     .copy-hero,
@@ -973,6 +976,8 @@ body.no-gsap .stage-content {
     }
 }
 
+
+/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 /* Jeszcze niższe ekrany, np. mały laptop / okno przeglądarki */
 @media (max-height: 700px) and (min-width: 761px) {
     .site-header {
@@ -1079,6 +1084,7 @@ body.no-gsap .stage-content {
     }
 }
 
+/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 /* Telefony i bardzo małe ekrany */
 @media (max-width: 760px) {
     .site-header {
