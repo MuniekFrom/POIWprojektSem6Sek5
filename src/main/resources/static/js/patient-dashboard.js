@@ -55,7 +55,7 @@ async function loadPatientAppointments() {
         const appointments = await response.json();
 
         if (!appointments.length) {
-            container.innerHTML = "<p>Nie masz jeszcze żadnych wizyt.</p>";
+            container.innerHTML = "<p>Nie masz jeszcze żadnych aktywnych wizyt.</p>";
             return;
         }
 
@@ -69,20 +69,33 @@ async function loadPatientAppointments() {
                 <p><strong>Powód:</strong> ${appointment.reason}</p>
                 <p>
                     <strong>Status:</strong>
-                    <span class="${appointment.status === "BOOKED" ? "status-booked" : "status-cancelled"}">
+                    <span class="${getStatusClass(appointment.status)}">
                         ${translateStatus(appointment.status)}
                     </span>
                 </p>
 
-                <button class="delete-btn"
-                    onclick="cancelAppointment(${appointment.id})">
-                    Anuluj wizytę
-                </button>
+                ${appointment.status === "BOOKED"
+                    ? `<button class="delete-btn" onclick="cancelAppointment(${appointment.id})">
+                            Anuluj wizytę
+                       </button>`
+                    : `<p class="cancelled-info">${getAppointmentInfoText(appointment.status)}</p>`
+                }
             </div>
         `).join("");
 
     } catch (error) {
         container.innerHTML = "Nie udało się pobrać wizyt.";
+    }
+}
+
+function getAppointmentInfoText(status) {
+    switch (status) {
+        case "CANCELLED":
+            return "Wizyta anulowana";
+        case "COMPLETED":
+            return "Wizyta odbyła się";
+        default:
+            return "";
     }
 }
 
@@ -116,14 +129,21 @@ async function cancelAppointment(appointmentId) {
         });
 
         if (!response.ok) {
-            throw new Error("Nie udało się anulować wizyty.");
+            let errorMessage = "Nie udało się anulować wizyty.";
+
+            try {
+                const errorData = await response.json();
+                errorMessage = translateBackendError(errorData.message) || errorMessage;
+            } catch (e) {}
+
+            throw new Error(errorMessage);
         }
 
         alert("Wizyta została anulowana.");
         await loadPatientAppointments();
 
     } catch (error) {
-        alert("Wystąpił nieoczekiwany błąd.");
+        alert(error.message);
     }
 }
 
@@ -186,7 +206,12 @@ async function loadAvailableSlots(doctorId) {
                 <p><strong>Specjalizacja:</strong> ${slot.specialization}</p>
                 <p><strong>Start:</strong> ${formatDate(slot.startTime)}</p>
                 <p><strong>Koniec:</strong> ${formatDate(slot.endTime)}</p>
-                <p><strong>Status:</strong> ${translateStatus(slot.status)}</p>
+                <p>
+                    <strong>Status:</strong>
+                    <span class="${getStatusClass(slot.status)}">
+                        ${translateStatus(slot.status)}
+                    </span>
+                </p>
 
                 <input type="text" id="reason-${slot.id}" placeholder="Powód wizyty">
 
@@ -230,21 +255,20 @@ async function bookAppointment(slotId) {
 
             try {
                 const errorData = await response.json();
-                errorMessage = errorData.message || errorMessage;
-            } catch (e) {
-            }
+                errorMessage = translateBackendError(errorData.message) || errorMessage;
+            } catch (e) {}
 
             throw new Error(errorMessage);
         }
 
-                alert("Wizyta została zarezerwowana.");
+        alert("Wizyta została zarezerwowana.");
 
-                await loadPatientAppointments();
-                document.getElementById("slotsContainer").innerHTML = "";
+        await loadPatientAppointments();
+        document.getElementById("slotsContainer").innerHTML = "";
 
-            } catch (error) {
-                alert(error.message);
-            }
+    } catch (error) {
+        alert(error.message);
+    }
 }
 
 function translateStatus(status) {
@@ -255,6 +279,8 @@ function translateStatus(status) {
             return "Anulowana";
         case "AVAILABLE":
             return "Dostępny";
+        case "COMPLETED":
+            return "Odbyło się";
         case "PENDING":
             return "Oczekuje";
         case "ACTIVE":
@@ -266,3 +292,36 @@ function translateStatus(status) {
     }
 }
 
+function getStatusClass(status) {
+    switch (status) {
+        case "BOOKED":
+            return "status-booked";
+        case "AVAILABLE":
+            return "status-available";
+        case "CANCELLED":
+            return "status-cancelled";
+        case "COMPLETED":
+            return "status-completed";
+        case "PENDING":
+            return "status-pending";
+        default:
+            return "";
+    }
+}
+
+function translateBackendError(message) {
+    switch (message) {
+        case "Cannot book appointment in the past":
+            return "Nie można zarezerwować terminu, który już minął.";
+        case "Slot is not available":
+            return "Ten termin nie jest już dostępny.";
+        case "Appointment already exists for this slot":
+            return "Dla tego terminu istnieje już wizyta.";
+        case "Cannot cancel completed appointment":
+            return "Nie można anulować wizyty, która już się odbyła.";
+        case "Cannot cancel appointment that has already ended":
+            return "Nie można anulować wizyty, która już się zakończyła.";
+        default:
+            return message;
+    }
+}

@@ -19,4 +19,10 @@ public interface AppointmentSlotRepository extends JpaRepository<AppointmentSlot
             LocalDateTime endTime,
             LocalDateTime startTime
     );
+
+    List<AppointmentSlot> findByEndTimeBeforeAndStatusIn(
+            LocalDateTime now,
+            List<AppointmentSlotStatus> statuses
+    );
+
 }

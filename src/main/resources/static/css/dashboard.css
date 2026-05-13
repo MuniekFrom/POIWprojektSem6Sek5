@@ -452,3 +452,76 @@ button:hover {
     font-weight: 800;
     font-size: 13px;
 }
+
+.today-section {
+    border-top: 4px solid rgba(13, 148, 136, 0.18);
+}
+
+.today-appointment-card {
+    border-left-color: #0f766e;
+}
+
+.empty-state {
+    width: 100%;
+    padding: 26px 28px;
+    border-radius: 24px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    color: #64748b;
+    font-weight: 700;
+}
+
+.empty-state p {
+    margin: 0;
+}
+
+.error-state {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #991b1b;
+}
+
+.status-completed {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: #e5e7eb;
+    color: #374151;
+    font-weight: 700;
+}
+
+.status-available {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: #dcfce7;
+    color: #166534;
+    font-weight: 700;
+}
+
+.status-booked {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: #dbeafe;
+    color: #1d4ed8;
+    font-weight: 700;
+}
+
+.status-cancelled {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: #fee2e2;
+    color: #991b1b;
+    font-weight: 700;
+}
+
+.status-pending {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: #fef3c7;
+    color: #92400e;
+    font-weight: 700;
+}

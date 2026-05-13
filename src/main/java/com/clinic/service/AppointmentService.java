@@ -37,13 +37,22 @@ public class AppointmentService {
     }
 
     public AppointmentResponse bookAppointment(AppointmentRequest request, String email) {
+        updatePastSlotsAndAppointments();
+
         AppointmentSlot slot = appointmentSlotRepository.findById(request.getSlotId())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Slot not found with id: " + request.getSlotId()
                 ));
 
-        if (!slot.isAvailable()) {
-            throw new BusinessValidationException("Slot is already booked");
+        if (slot.getStartTime().isBefore(LocalDateTime.now())) {
+            slot.setStatus(AppointmentSlotStatus.COMPLETED);
+            appointmentSlotRepository.save(slot);
+
+            throw new BusinessValidationException("Cannot book appointment in the past");
+        }
+
+        if (slot.getStatus() != AppointmentSlotStatus.AVAILABLE) {
+            throw new BusinessValidationException("Slot is not available");
         }
 
         if (appointmentRepository.existsByAppointmentSlotIdAndStatus(slot.getId(), AppointmentStatus.BOOKED)) {
@@ -70,8 +79,9 @@ public class AppointmentService {
         return mapToAppointmentResponse(savedAppointment);
     }
 
-
     public List<AppointmentResponse> getAppointmentsForLoggedPatient(String email) {
+        updatePastSlotsAndAppointments();
+
         Patient patient = patientRepository.findByUserEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Patient not found for email: " + email
@@ -84,8 +94,11 @@ public class AppointmentService {
     }
 
     public List<AppointmentSlotResponse> getAvailableSlots(Long doctorId) {
+        updatePastSlotsAndAppointments();
+
         return appointmentSlotRepository.findByDoctorIdAndStatus(doctorId, AppointmentSlotStatus.AVAILABLE)
                 .stream()
+                .filter(slot -> slot.getStartTime().isAfter(LocalDateTime.now()))
                 .map(slot -> new AppointmentSlotResponse(
                         slot.getId(),
                         slot.getDoctor().getFirstName() + " " + slot.getDoctor().getLastName(),
@@ -98,6 +111,8 @@ public class AppointmentService {
     }
 
     public void cancelAppointment(Long appointmentId, String email) {
+        updatePastSlotsAndAppointments();
+
         Appointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Appointment not found with id: " + appointmentId
@@ -116,7 +131,21 @@ public class AppointmentService {
             throw new BusinessValidationException("Appointment is already cancelled");
         }
 
+        if (appointment.getStatus() == AppointmentStatus.COMPLETED) {
+            throw new BusinessValidationException("Cannot cancel completed appointment");
+        }
+
         AppointmentSlot slot = appointment.getAppointmentSlot();
+
+        if (slot.getEndTime().isBefore(LocalDateTime.now())) {
+            appointment.setStatus(AppointmentStatus.COMPLETED);
+            slot.setStatus(AppointmentSlotStatus.COMPLETED);
+
+            appointmentSlotRepository.save(slot);
+            appointmentRepository.save(appointment);
+
+            throw new BusinessValidationException("Cannot cancel appointment that has already ended");
+        }
 
         appointment.setStatus(AppointmentStatus.CANCELLED);
         slot.setStatus(AppointmentSlotStatus.AVAILABLE);
@@ -125,23 +154,9 @@ public class AppointmentService {
         appointmentRepository.save(appointment);
     }
 
-    private AppointmentResponse mapToAppointmentResponse(Appointment appointment) {
-        return new AppointmentResponse(
-                appointment.getId(),
-                appointment.getAppointmentSlot().getDoctor().getFirstName() + " " +
-                        appointment.getAppointmentSlot().getDoctor().getLastName(),
-                appointment.getAppointmentSlot().getDoctor().getSpecialization(),
-                appointment.getPatient().getFirstName() + " " +
-                        appointment.getPatient().getLastName(),
-                appointment.getAppointmentSlot().getStartTime(),
-                appointment.getAppointmentSlot().getEndTime(),
-                appointment.getBookedAt(),
-                appointment.getReason(),
-                appointment.getStatus().name()
-        );
-    }
-
     public List<AppointmentResponse> getAllAppointments() {
+        updatePastSlotsAndAppointments();
+
         return appointmentRepository.findAll()
                 .stream()
                 .map(this::mapToAppointmentResponse)
@@ -149,6 +164,8 @@ public class AppointmentService {
     }
 
     public void deleteAppointmentByAdmin(Long appointmentId) {
+        updatePastSlotsAndAppointments();
+
         Appointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Appointment not found with id: " + appointmentId
@@ -158,7 +175,21 @@ public class AppointmentService {
             throw new BusinessValidationException("Appointment is already cancelled");
         }
 
+        if (appointment.getStatus() == AppointmentStatus.COMPLETED) {
+            throw new BusinessValidationException("Cannot cancel completed appointment");
+        }
+
         AppointmentSlot slot = appointment.getAppointmentSlot();
+
+        if (slot.getEndTime().isBefore(LocalDateTime.now())) {
+            appointment.setStatus(AppointmentStatus.COMPLETED);
+            slot.setStatus(AppointmentSlotStatus.COMPLETED);
+
+            appointmentSlotRepository.save(slot);
+            appointmentRepository.save(appointment);
+
+            throw new BusinessValidationException("Cannot cancel appointment that has already ended");
+        }
 
         appointment.setStatus(AppointmentStatus.CANCELLED);
         slot.setStatus(AppointmentSlotStatus.AVAILABLE);
@@ -181,9 +212,68 @@ public class AppointmentService {
         userRepository.delete(user);
     }
 
+    public List<AppointmentResponse> getTodayAppointmentsForDoctor(String email) {
+        updatePastSlotsAndAppointments();
 
+        LocalDateTime startOfDay = LocalDateTime.now().toLocalDate().atStartOfDay();
+        LocalDateTime endOfDay = startOfDay.plusDays(1);
 
+        return appointmentRepository
+                .findByAppointmentSlotDoctorUserEmailAndAppointmentSlotStartTimeBetweenAndStatusIn(
+                        email,
+                        startOfDay,
+                        endOfDay,
+                        List.of(AppointmentStatus.BOOKED, AppointmentStatus.COMPLETED)
+                )
+                .stream()
+                .map(this::mapToAppointmentResponse)
+                .collect(Collectors.toList());
+    }
 
+    private void updatePastSlotsAndAppointments() {
+        LocalDateTime now = LocalDateTime.now();
 
+        List<AppointmentSlot> oldSlots = appointmentSlotRepository.findByEndTimeBeforeAndStatusIn(
+                now,
+                List.of(AppointmentSlotStatus.AVAILABLE, AppointmentSlotStatus.BOOKED)
+        );
 
+        for (AppointmentSlot slot : oldSlots) {
+            slot.setStatus(AppointmentSlotStatus.COMPLETED);
+        }
+
+        if (!oldSlots.isEmpty()) {
+            appointmentSlotRepository.saveAll(oldSlots);
+        }
+
+        List<Appointment> oldAppointments = appointmentRepository.findAll()
+                .stream()
+                .filter(appointment -> appointment.getStatus() == AppointmentStatus.BOOKED)
+                .filter(appointment -> appointment.getAppointmentSlot().getEndTime().isBefore(now))
+                .collect(Collectors.toList());
+
+        for (Appointment appointment : oldAppointments) {
+            appointment.setStatus(AppointmentStatus.COMPLETED);
+        }
+
+        if (!oldAppointments.isEmpty()) {
+            appointmentRepository.saveAll(oldAppointments);
+        }
+    }
+
+    private AppointmentResponse mapToAppointmentResponse(Appointment appointment) {
+        return new AppointmentResponse(
+                appointment.getId(),
+                appointment.getAppointmentSlot().getDoctor().getFirstName() + " " +
+                        appointment.getAppointmentSlot().getDoctor().getLastName(),
+                appointment.getAppointmentSlot().getDoctor().getSpecialization(),
+                appointment.getPatient().getFirstName() + " " +
+                        appointment.getPatient().getLastName(),
+                appointment.getAppointmentSlot().getStartTime(),
+                appointment.getAppointmentSlot().getEndTime(),
+                appointment.getBookedAt(),
+                appointment.getReason(),
+                appointment.getStatus().name()
+        );
+    }
 }

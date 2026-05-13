@@ -73,3 +73,48 @@ button {
     color: #991b1b;
     font-weight: 600;
 }
+
+.status-completed {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: #e5e7eb;
+    color: #374151;
+    font-weight: 700;
+}
+
+.status-available {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: #dcfce7;
+    color: #166534;
+    font-weight: 700;
+}
+
+.status-booked {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: #dbeafe;
+    color: #1d4ed8;
+    font-weight: 700;
+}
+
+.status-cancelled {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: #fee2e2;
+    color: #991b1b;
+    font-weight: 700;
+}
+
+.status-pending {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: #fef3c7;
+    color: #92400e;
+    font-weight: 700;
+}

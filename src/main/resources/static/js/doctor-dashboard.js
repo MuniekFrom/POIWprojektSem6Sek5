@@ -3,13 +3,38 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     setupTimeRounding();
     setupSlotForm();
+    setupMinDateTime();
+
     await loadDoctorProfile();
+    await loadTodayAppointments();
     await loadDoctorSlots();
 });
+
+function setupMinDateTime() {
+    const startTimeInput = document.getElementById("startTime");
+    const endTimeInput = document.getElementById("endTime");
+
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+
+    const minDateTime = now.toISOString().slice(0, 16);
+
+    if (startTimeInput) {
+        startTimeInput.min = minDateTime;
+    }
+
+    if (endTimeInput) {
+        endTimeInput.min = minDateTime;
+    }
+}
 
 function setupTimeRounding() {
     const startTimeInput = document.getElementById("startTime");
     const endTimeInput = document.getElementById("endTime");
+
+    if (!startTimeInput || !endTimeInput) {
+        return;
+    }
 
     startTimeInput.addEventListener("change", () => {
         startTimeInput.value = roundToNearestFiveMinutes(startTimeInput.value);
@@ -72,6 +97,62 @@ async function loadDoctorProfile() {
     }
 }
 
+async function loadTodayAppointments() {
+    const container = document.getElementById("todayAppointmentsContainer");
+
+    if (!container) {
+        return;
+    }
+
+    try {
+        const token = getToken();
+
+        const response = await fetch(`${API_BASE_URL}/appointments/doctor/today`, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Błąd pobierania dzisiejszych wizyt");
+        }
+
+        const appointments = await response.json();
+
+        if (!appointments.length) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <p>Nie masz dzisiaj żadnych wizyt.</p>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = appointments.map(appointment => `
+            <div class="slot-card today-appointment-card">
+                <p><strong>ID:</strong> ${appointment.id}</p>
+                <p><strong>Pacjent:</strong> ${appointment.patientName}</p>
+                <p><strong>Start:</strong> ${formatDate(appointment.startTime)}</p>
+                <p><strong>Koniec:</strong> ${formatDate(appointment.endTime)}</p>
+                <p><strong>Powód:</strong> ${appointment.reason || "Brak powodu"}</p>
+                <p>
+                    <strong>Status:</strong>
+                    <span class="${getStatusClass(appointment.status)}">
+                        ${translateAppointmentStatus(appointment.status)}
+                    </span>
+                </p>
+            </div>
+        `).join("");
+
+    } catch (error) {
+        container.innerHTML = `
+            <div class="empty-state error-state">
+                <p>Nie udało się pobrać dzisiejszych wizyt.</p>
+            </div>
+        `;
+    }
+}
+
 async function loadDoctorSlots() {
     const container = document.getElementById("slotsContainer");
 
@@ -91,7 +172,11 @@ async function loadDoctorSlots() {
         const slots = await response.json();
 
         if (!slots.length) {
-            container.innerHTML = "<p>Brak slotów.</p>";
+            container.innerHTML = `
+                <div class="empty-state">
+                    <p>Brak slotów.</p>
+                </div>
+            `;
             return;
         }
 
@@ -102,8 +187,8 @@ async function loadDoctorSlots() {
                 <p><strong>Koniec:</strong> ${formatDate(slot.endTime)}</p>
                 <p>
                     <strong>Status:</strong>
-                    <span class="${slot.status === "BOOKED" ? "status-booked" : "status-available"}">
-                        ${translateStatus(slot.status)}
+                    <span class="${getStatusClass(slot.status)}">
+                        ${translateSlotStatus(slot.status)}
                     </span>
                 </p>
 
@@ -115,13 +200,21 @@ async function loadDoctorSlots() {
         `).join("");
 
     } catch (error) {
-        container.innerHTML = "Nie udało się pobrać slotów.";
+        container.innerHTML = `
+            <div class="empty-state error-state">
+                <p>Nie udało się pobrać slotów.</p>
+            </div>
+        `;
     }
 }
 
 function setupSlotForm() {
     const form = document.getElementById("slotForm");
     const message = document.getElementById("slotMessage");
+
+    if (!form) {
+        return;
+    }
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -133,6 +226,11 @@ function setupSlotForm() {
 
         if (!startTime || !endTime) {
             message.textContent = "Uzupełnij datę początku i końca.";
+            return;
+        }
+
+        if (new Date(startTime) < new Date()) {
+            message.textContent = "Nie można dodać slotu w przeszłości.";
             return;
         }
 
@@ -161,9 +259,8 @@ function setupSlotForm() {
 
                 try {
                     const errorData = await response.json();
-                    errorMessage = errorData.message || errorMessage;
-                } catch (e) {
-                }
+                    errorMessage = translateBackendError(errorData.message) || errorMessage;
+                } catch (e) {}
 
                 throw new Error(errorMessage);
             }
@@ -171,6 +268,8 @@ function setupSlotForm() {
             message.textContent = "Slot został dodany.";
             form.reset();
 
+            setupMinDateTime();
+            await loadTodayAppointments();
             await loadDoctorSlots();
 
         } catch (error) {
@@ -217,13 +316,13 @@ async function deleteSlot(slotId) {
 
             try {
                 const errorData = await response.json();
-                errorMessage = errorData.message || errorMessage;
-            } catch (e) {
-            }
+                errorMessage = translateBackendError(errorData.message) || errorMessage;
+            } catch (e) {}
 
             throw new Error(errorMessage);
         }
 
+        await loadTodayAppointments();
         await loadDoctorSlots();
 
     } catch (error) {
@@ -231,7 +330,7 @@ async function deleteSlot(slotId) {
     }
 }
 
-function translateStatus(status) {
+function translateSlotStatus(status) {
     switch (status) {
         case "BOOKED":
             return "Zarezerwowany";
@@ -239,7 +338,56 @@ function translateStatus(status) {
             return "Dostępny";
         case "CANCELLED":
             return "Anulowany";
+        case "COMPLETED":
+            return "Odbyło się";
         default:
             return status;
+    }
+}
+
+function translateAppointmentStatus(status) {
+    switch (status) {
+        case "BOOKED":
+            return "Zarezerwowana";
+        case "CANCELLED":
+            return "Anulowana";
+        case "COMPLETED":
+            return "Odbyła się";
+        default:
+            return status;
+    }
+}
+
+function getStatusClass(status) {
+    switch (status) {
+        case "BOOKED":
+            return "status-booked";
+        case "AVAILABLE":
+            return "status-available";
+        case "CANCELLED":
+            return "status-cancelled";
+        case "COMPLETED":
+            return "status-completed";
+        default:
+            return "";
+    }
+}
+
+function translateBackendError(message) {
+    switch (message) {
+        case "Cannot create slot in the past":
+            return "Nie można dodać terminu w przeszłości.";
+        case "Cannot create slot that has already ended":
+            return "Nie można dodać terminu, który już minął.";
+        case "endTime must be after startTime":
+            return "Koniec slotu musi być później niż początek.";
+        case "Slot overlaps with existing doctor's slot":
+            return "Ten termin nakłada się na inny slot lekarza.";
+        case "Cannot delete booked slot":
+            return "Nie można usunąć zarezerwowanego slotu.";
+        case "Cannot delete completed slot":
+            return "Nie można usunąć slotu, który już się odbył.";
+        default:
+            return message;
     }
 }

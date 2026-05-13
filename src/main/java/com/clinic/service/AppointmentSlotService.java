@@ -5,8 +5,8 @@ import com.clinic.dto.CreateAppointmentSlotRequest;
 import com.clinic.exception.BusinessValidationException;
 import com.clinic.exception.ResourceNotFoundException;
 import com.clinic.model.AppointmentSlot;
-import com.clinic.model.enums.AppointmentSlotStatus;
 import com.clinic.model.Doctor;
+import com.clinic.model.enums.AppointmentSlotStatus;
 import com.clinic.repository.AppointmentSlotRepository;
 import com.clinic.repository.DoctorRepository;
 import org.springframework.stereotype.Service;
@@ -37,12 +37,18 @@ public class AppointmentSlotService {
             throw new IllegalArgumentException("startTime and endTime cannot be null");
         }
 
-        if (!request.getEndTime().isAfter(request.getStartTime())) {
-            throw new BusinessValidationException("endTime must be after startTime");
+        LocalDateTime now = LocalDateTime.now();
+
+        if (request.getStartTime().isBefore(now)) {
+            throw new BusinessValidationException("Cannot create slot in the past");
         }
 
-        if (request.getStartTime().isBefore(LocalDateTime.now())) {
-            throw new BusinessValidationException("Cannot create slot in the past");
+        if (request.getEndTime().isBefore(now)) {
+            throw new BusinessValidationException("Cannot create slot that has already ended");
+        }
+
+        if (!request.getEndTime().isAfter(request.getStartTime())) {
+            throw new BusinessValidationException("endTime must be after startTime");
         }
 
         boolean overlaps = appointmentSlotRepository
@@ -68,6 +74,8 @@ public class AppointmentSlotService {
     }
 
     public void deleteSlot(Long slotId, String email) {
+        updatePastSlots();
+
         AppointmentSlot slot = appointmentSlotRepository.findById(slotId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Slot not found with id: " + slotId
@@ -86,10 +94,16 @@ public class AppointmentSlotService {
             throw new BusinessValidationException("Cannot delete booked slot");
         }
 
+        if (slot.getStatus() == AppointmentSlotStatus.COMPLETED) {
+            throw new BusinessValidationException("Cannot delete completed slot");
+        }
+
         appointmentSlotRepository.delete(slot);
     }
 
     public List<AppointmentSlotResponse> getSlotsForLoggedDoctor(String email) {
+        updatePastSlots();
+
         Doctor doctor = doctorRepository.findByUserEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Doctor not found for email: " + email
@@ -99,6 +113,23 @@ public class AppointmentSlotService {
                 .stream()
                 .map(this::mapToAppointmentSlotResponse)
                 .collect(Collectors.toList());
+    }
+
+    private void updatePastSlots() {
+        List<AppointmentSlot> oldSlots = appointmentSlotRepository.findByEndTimeBeforeAndStatusIn(
+                LocalDateTime.now(),
+                List.of(AppointmentSlotStatus.AVAILABLE, AppointmentSlotStatus.BOOKED)
+        );
+
+        if (oldSlots.isEmpty()) {
+            return;
+        }
+
+        for (AppointmentSlot slot : oldSlots) {
+            slot.setStatus(AppointmentSlotStatus.COMPLETED);
+        }
+
+        appointmentSlotRepository.saveAll(oldSlots);
     }
 
     private AppointmentSlotResponse mapToAppointmentSlotResponse(AppointmentSlot slot) {

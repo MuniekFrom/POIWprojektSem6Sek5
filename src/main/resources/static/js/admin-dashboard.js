@@ -138,7 +138,7 @@ function renderAppointments() {
             <p><strong>Powód:</strong> ${a.reason}</p>
             <p>
                 <strong>Status:</strong>
-                <span class="${a.status === "BOOKED" ? "status-booked" : "status-cancelled"}">
+                <span class="${getStatusClass(a.status)}">
                     ${translateStatus(a.status)}
                 </span>
             </p>
@@ -147,10 +147,21 @@ function renderAppointments() {
                 ? `<button class="delete-btn" onclick="deleteAppointment(${a.id})">
                         Anuluj wizytę
                    </button>`
-                : `<p class="cancelled-info">Wizyta anulowana</p>`
+                : `<p class="cancelled-info">${getAppointmentInfoText(a.status)}</p>`
             }
         </div>
     `).join("");
+}
+
+function getAppointmentInfoText(status) {
+    switch (status) {
+        case "CANCELLED":
+            return "Wizyta anulowana";
+        case "COMPLETED":
+            return "Wizyta odbyła się";
+        default:
+            return "";
+    }
 }
 
 async function deleteUser(userId) {
@@ -174,8 +185,7 @@ async function deleteUser(userId) {
             try {
                 const errorData = await response.json();
                 errorMessage = errorData.message || errorMessage;
-            } catch (e) {
-            }
+            } catch (e) {}
 
             throw new Error(errorMessage);
         }
@@ -205,7 +215,14 @@ async function deleteAppointment(id) {
         });
 
         if (!response.ok) {
-            throw new Error("Nie udało się anulować wizyty");
+            let errorMessage = "Nie udało się anulować wizyty.";
+
+            try {
+                const errorData = await response.json();
+                errorMessage = translateBackendError(errorData.message) || errorMessage;
+            } catch (e) {}
+
+            throw new Error(errorMessage);
         }
 
         alert("Wizyta została anulowana.");
@@ -383,6 +400,8 @@ function translateStatus(status) {
             return "Anulowana";
         case "AVAILABLE":
             return "Dostępny";
+        case "COMPLETED":
+            return "Odbyło się";
         case "PENDING":
             return "Oczekuje";
         case "ACTIVE":
@@ -391,6 +410,23 @@ function translateStatus(status) {
             return "Odrzucone";
         default:
             return status;
+    }
+}
+
+function getStatusClass(status) {
+    switch (status) {
+        case "BOOKED":
+            return "status-booked";
+        case "AVAILABLE":
+            return "status-available";
+        case "CANCELLED":
+            return "status-cancelled";
+        case "COMPLETED":
+            return "status-completed";
+        case "PENDING":
+            return "status-pending";
+        default:
+            return "";
     }
 }
 
@@ -404,5 +440,16 @@ function translateRole(role) {
             return "Pacjent";
         default:
             return role;
+    }
+}
+
+function translateBackendError(message) {
+    switch (message) {
+        case "Cannot cancel completed appointment":
+            return "Nie można anulować wizyty, która już się odbyła.";
+        case "Cannot cancel appointment that has already ended":
+            return "Nie można anulować wizyty, która już się zakończyła.";
+        default:
+            return message;
     }
 }

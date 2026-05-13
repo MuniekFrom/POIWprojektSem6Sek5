@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -40,6 +41,13 @@ public class AppointmentController {
     public ResponseEntity<List<AppointmentResponse>> getMyAppointments(Authentication authentication) {
         String email = authentication.getName();
         return ResponseEntity.ok(appointmentService.getAppointmentsForLoggedPatient(email));
+    }
+
+    @GetMapping("/doctor/today")
+    public ResponseEntity<List<AppointmentResponse>> getTodayAppointmentsForDoctor(Principal principal) {
+        return ResponseEntity.ok(
+                appointmentService.getTodayAppointmentsForDoctor(principal.getName())
+        );
     }
 
     @DeleteMapping("/{appointmentId}")
