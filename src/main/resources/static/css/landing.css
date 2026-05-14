@@ -11,14 +11,6 @@
     --shadow-card: 0 26px 70px rgba(15, 23, 42, 0.14);
 }
 
-* {
-    box-sizing: border-box;
-}
-
-html {
-    scroll-behavior: smooth;
-}
-
 body.alpine-body {
     margin: 0;
     min-height: 100vh;
@@ -44,6 +36,8 @@ body.menu-open {
     pointer-events: none;
     transition: width .08s linear;
 }
+
+/* ===== Nagłówek ===== */
 
 .site-header {
     position: fixed;
@@ -173,6 +167,8 @@ body.menu-open {
     transform: translateY(-3.5px) rotate(-45deg);
 }
 
+/* ===== Sekcja animacji ===== */
+
 .cinematic-experience {
     position: relative;
     min-height: 100vh;
@@ -273,6 +269,8 @@ body.menu-open {
     margin: 0 auto;
 }
 
+/* ===== Teksty i panele ===== */
+
 .copy-block,
 .role-panel {
     position: absolute;
@@ -348,69 +346,18 @@ h1 {
 }
 
 .copy-block h2,
-.role-panel h2,
-.quick-card h2 {
+.role-panel h2 {
     font-size: clamp(38px, 5.7vw, 66px);
 }
 
 .lead,
 .copy-block p,
-.role-panel p,
-.quick-card p {
+.role-panel p {
     max-width: 640px;
     margin: 0;
     color: rgba(255,255,255,.95);
     font-size: 18px;
     line-height: 1.75;
-}
-
-.intro-actions,
-.panel-actions,
-.quick-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 14px;
-}
-
-.intro-actions {
-    margin-top: 30px;
-}
-
-.btn,
-.panel-btn,
-.quick-link {
-    position: relative;
-    z-index: 10;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 54px;
-    padding: 0 22px;
-    border-radius: 16px;
-    text-decoration: none;
-    font-weight: 900;
-    transition: transform .22s ease, background .22s ease, border-color .22s ease, box-shadow .22s ease;
-}
-
-.btn-primary,
-.quick-link.primary {
-    color: white;
-    background: linear-gradient(135deg, var(--blue), var(--blue-dark));
-    box-shadow: 0 16px 34px rgba(37, 99, 235, 0.28);
-}
-
-.btn-soft {
-    color: white;
-    background: rgba(255,255,255,.15);
-    border: 1px solid rgba(255,255,255,.26);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-}
-
-.btn:hover,
-.panel-btn:hover,
-.quick-link:hover {
-    transform: translateY(-3px);
 }
 
 .scroll-note {
@@ -442,6 +389,8 @@ h1 {
     }
 }
 
+/* ===== Panele pacjenta/lekarza ===== */
+
 .role-panel {
     top: 47%;
     right: 0;
@@ -469,9 +418,36 @@ h1 {
     font-size: 16px;
 }
 
+.panel-actions,
+.quick-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
 .panel-actions {
     margin-top: 24px;
     flex-direction: column;
+}
+
+.panel-btn,
+.quick-link {
+    position: relative;
+    z-index: 10;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 54px;
+    padding: 0 22px;
+    border-radius: 16px;
+    text-decoration: none;
+    font-weight: 900;
+    transition: transform .22s ease, background .22s ease, border-color .22s ease, box-shadow .22s ease;
+}
+
+.panel-btn:hover,
+.quick-link:hover {
+    transform: translateY(-3px);
 }
 
 .panel-btn {
@@ -502,6 +478,8 @@ h1 {
     font-size: 20px;
     line-height: 1;
 }
+
+/* ===== Końcowy panel szybkiego dostępu ===== */
 
 .quick-panel {
     left: 50%;
@@ -570,6 +548,21 @@ h1 {
     border: 1px solid rgba(255,255,255,.20);
     color: #0f172a;
 }
+
+.quick-link {
+    color: var(--ink);
+    background: rgba(15,23,42,.045);
+    border: 1px solid rgba(15,23,42,.09);
+}
+
+.quick-link.primary {
+    color: white;
+    border-color: transparent;
+    background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+    box-shadow: 0 16px 34px rgba(37, 99, 235, 0.28);
+}
+
+/* ===== Boczne kroki ===== */
 
 .step-rail {
     position: absolute;
@@ -649,63 +642,8 @@ h1 {
     transform: translateZ(0);
 }
 
-.quick-access {
-    padding: 110px 22px 72px;
-    background:
-        radial-gradient(circle at top, rgba(37,99,235,.10), transparent 34%),
-        linear-gradient(180deg, #eef5fb 0%, #ffffff 100%);
-}
+/* ===== Fallback gdy GSAP się nie załaduje ===== */
 
-.quick-card {
-    width: min(980px, 100%);
-    margin: 0 auto;
-    padding: 42px;
-    border-radius: 34px;
-    background: rgba(255,255,255,.94);
-    border: 1px solid rgba(15,23,42,.06);
-    box-shadow: 0 30px 80px rgba(15,23,42,.08);
-    text-align: center;
-}
-
-.quick-card h2 {
-    color: var(--ink);
-    font-weight: 400;
-}
-
-.quick-card p {
-    max-width: 680px;
-    margin: 0 auto;
-    color: var(--muted);
-}
-
-.quick-grid {
-    justify-content: center;
-    margin-top: 28px;
-}
-
-.quick-link {
-    color: var(--ink);
-    background: rgba(15,23,42,.045);
-    border: 1px solid rgba(15,23,42,.09);
-}
-
-.quick-link.primary {
-    color: white;
-    border-color: transparent;
-}
-
-.site-footer {
-    padding: 30px 20px 38px;
-    background: #ffffff;
-    color: #64748b;
-    text-align: center;
-}
-
-.site-footer p {
-    margin: 0;
-}
-
-/* Fallback gdy GSAP się nie załaduje */
 body.no-gsap .cinematic-experience {
     min-height: auto;
 }
@@ -741,6 +679,8 @@ body.no-gsap .stage-content {
     height: auto;
 }
 
+/* ===== Dostępność ===== */
+
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
         animation-duration: 0.001ms !important;
@@ -750,8 +690,8 @@ body.no-gsap .stage-content {
     }
 }
 
-/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-/* Tablety i mniejsze szerokości */
+/* ===== Tablety i mniejsze szerokości ===== */
+
 @media (max-width: 1000px) {
     .site-header {
         width: calc(100% - 18px);
@@ -784,8 +724,8 @@ body.no-gsap .stage-content {
     }
 }
 
-/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-/* Laptopy z niższym ekranem, np. 1366x768 */
+/* ===== Laptopy z niższym ekranem, np. 1366x768 ===== */
+
 @media (max-height: 820px) and (min-width: 1001px) {
     .site-header {
         top: 10px;
@@ -930,8 +870,8 @@ body.no-gsap .stage-content {
     }
 }
 
-/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-/* Węższe laptopy / tablety poziomo */
+/* ===== Węższe laptopy / tablety poziomo ===== */
+
 @media (max-width: 1000px) and (min-width: 761px) {
     .copy-hero,
     .copy-entrance {
@@ -976,9 +916,8 @@ body.no-gsap .stage-content {
     }
 }
 
+/* ===== Jeszcze niższe ekrany, np. mały laptop / okno przeglądarki ===== */
 
-/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-/* Jeszcze niższe ekrany, np. mały laptop / okno przeglądarki */
 @media (max-height: 700px) and (min-width: 761px) {
     .site-header {
         top: 8px;
@@ -1084,8 +1023,8 @@ body.no-gsap .stage-content {
     }
 }
 
-/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-/* Telefony i bardzo małe ekrany */
+/* ===== Telefony i bardzo małe ekrany ===== */
+
 @media (max-width: 760px) {
     .site-header {
         align-items: flex-start;
@@ -1160,8 +1099,7 @@ body.no-gsap .stage-content {
 
     .lead,
     .copy-block p,
-    .role-panel p,
-    .quick-card p {
+    .role-panel p {
         font-size: 15px;
         line-height: 1.55;
         max-width: 100%;
@@ -1252,12 +1190,10 @@ body.no-gsap .stage-content {
         font-size: 13px;
     }
 
-    .intro-actions,
     .quick-grid {
         flex-direction: column;
     }
 
-    .btn,
     .quick-link {
         width: 100%;
     }
@@ -1271,14 +1207,10 @@ body.no-gsap .stage-content {
         font-size: 11px;
         padding: 0 14px;
     }
-
-    .quick-card {
-        padding: 28px 20px;
-        border-radius: 26px;
-    }
 }
 
-/* Bardzo niskie telefony / małe okna */
+/* ===== Bardzo niskie telefony / małe okna ===== */
+
 @media (max-width: 760px) and (max-height: 680px) {
     .copy-hero,
     .copy-entrance {

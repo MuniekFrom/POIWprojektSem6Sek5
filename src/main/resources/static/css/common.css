@@ -18,7 +18,10 @@ a {
     color: inherit;
 }
 
-button {
+button,
+input,
+select,
+textarea {
     font-family: inherit;
 }
 
@@ -51,70 +54,46 @@ button {
     background: #eff6ff;
 }
 
-.status-booked {
-    display: inline-block;
-    padding: 4px 10px;
-    border-radius: 999px;
-    background-color: #dcfce7;
-    color: #166534;
-    font-weight: 600;
-}
-
-.status-cancelled {
-    display: inline-block;
-    padding: 4px 10px;
-    border-radius: 999px;
-    background-color: #fee2e2;
-    color: #991b1b;
-    font-weight: 600;
-}
-
 .cancelled-info {
     color: #991b1b;
-    font-weight: 600;
-}
-
-.status-completed {
-    display: inline-block;
-    padding: 5px 10px;
-    border-radius: 999px;
-    background: #e5e7eb;
-    color: #374151;
     font-weight: 700;
 }
 
-.status-available {
-    display: inline-block;
-    padding: 5px 10px;
-    border-radius: 999px;
-    background: #dcfce7;
-    color: #166534;
-    font-weight: 700;
-}
+/* ===== Statusy globalne ===== */
 
-.status-booked {
-    display: inline-block;
-    padding: 5px 10px;
-    border-radius: 999px;
-    background: #dbeafe;
-    color: #1d4ed8;
-    font-weight: 700;
-}
-
-.status-cancelled {
-    display: inline-block;
-    padding: 5px 10px;
-    border-radius: 999px;
-    background: #fee2e2;
-    color: #991b1b;
-    font-weight: 700;
-}
-
+.status-booked,
+.status-cancelled,
+.status-completed,
+.status-available,
 .status-pending {
     display: inline-block;
     padding: 5px 10px;
     border-radius: 999px;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.status-booked {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.status-cancelled {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.status-completed {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+.status-available {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-pending {
     background: #fef3c7;
     color: #92400e;
-    font-weight: 700;
 }

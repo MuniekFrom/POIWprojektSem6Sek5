@@ -10,6 +10,8 @@ public class AppointmentSlotResponse {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private String status;
+    private Long patientId;
+    private String patientName;
 
     public AppointmentSlotResponse() {
     }
@@ -22,6 +24,19 @@ public class AppointmentSlotResponse {
         this.startTime = startTime;
         this.endTime = endTime;
         this.status = status;
+    }
+
+    public AppointmentSlotResponse(Long id, String doctorName, String specialization,
+                                   LocalDateTime startTime, LocalDateTime endTime, String status,
+                                   Long patientId, String patientName) {
+        this.id = id;
+        this.doctorName = doctorName;
+        this.specialization = specialization;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.status = status;
+        this.patientId = patientId;
+        this.patientName = patientName;
     }
 
     public Long getId() {
@@ -48,6 +63,14 @@ public class AppointmentSlotResponse {
         return status;
     }
 
+    public Long getPatientId() {
+        return patientId;
+    }
+
+    public String getPatientName() {
+        return patientName;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -70,5 +93,13 @@ public class AppointmentSlotResponse {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public void setPatientId(Long patientId) {
+        this.patientId = patientId;
+    }
+
+    public void setPatientName(String patientName) {
+        this.patientName = patientName;
     }
 }

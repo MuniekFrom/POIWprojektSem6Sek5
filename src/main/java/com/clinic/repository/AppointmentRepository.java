@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
 
@@ -21,6 +22,21 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
             String email,
             LocalDateTime start,
             LocalDateTime end,
+            List<AppointmentStatus> statuses
+    );
+
+    boolean existsByPatientIdAndAppointmentSlotDoctorUserEmail(
+            Long patientId,
+            String doctorEmail
+    );
+
+    List<Appointment> findByPatientIdAndAppointmentSlotDoctorUserEmailOrderByAppointmentSlotStartTimeDesc(
+            Long patientId,
+            String doctorEmail
+    );
+
+    Optional<Appointment> findFirstByAppointmentSlotIdAndStatusIn(
+            Long slotId,
             List<AppointmentStatus> statuses
     );
 }

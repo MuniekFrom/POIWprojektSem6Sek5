@@ -36,7 +36,6 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.bookAppointment(request, email));
     }
 
-
     @GetMapping("/me")
     public ResponseEntity<List<AppointmentResponse>> getMyAppointments(Authentication authentication) {
         String email = authentication.getName();
@@ -47,6 +46,16 @@ public class AppointmentController {
     public ResponseEntity<List<AppointmentResponse>> getTodayAppointmentsForDoctor(Principal principal) {
         return ResponseEntity.ok(
                 appointmentService.getTodayAppointmentsForDoctor(principal.getName())
+        );
+    }
+
+    @GetMapping("/doctor/patients/{patientId}/history")
+    public ResponseEntity<List<AppointmentResponse>> getPatientHistoryForDoctor(
+            @PathVariable Long patientId,
+            Principal principal
+    ) {
+        return ResponseEntity.ok(
+                appointmentService.getPatientHistoryForDoctor(patientId, principal.getName())
         );
     }
 

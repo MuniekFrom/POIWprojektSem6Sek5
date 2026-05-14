@@ -124,7 +124,7 @@ select {
     border-radius: 15px;
     font-size: 15px;
     outline: none;
-    background: #fff;
+    background: #ffffff;
     transition: 0.2s ease;
 }
 
@@ -161,6 +161,15 @@ button:hover {
 
 .delete-btn:hover {
     background: linear-gradient(135deg, #dc2626, #b91c1c);
+}
+
+.approve-btn {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    box-shadow: 0 12px 26px rgba(22, 163, 74, 0.20);
+}
+
+.approve-btn:hover {
+    background: linear-gradient(135deg, #16a34a, #15803d);
 }
 
 #slotForm {
@@ -266,26 +275,6 @@ button:hover {
     background: #0f766e;
 }
 
-.status-booked {
-    display: inline-block;
-    padding: 5px 12px;
-    border-radius: 999px;
-    background-color: #dcfce7;
-    color: #166534;
-    font-weight: 800;
-    font-size: 13px;
-}
-
-.status-cancelled {
-    display: inline-block;
-    padding: 5px 12px;
-    border-radius: 999px;
-    background-color: #fee2e2;
-    color: #991b1b;
-    font-weight: 800;
-    font-size: 13px;
-}
-
 .cancelled-info {
     color: #991b1b;
     font-weight: 800;
@@ -343,6 +332,231 @@ button:hover {
     font-weight: 800;
 }
 
+.action-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 14px;
+    align-items: stretch;
+}
+
+.action-buttons .approve-btn,
+.action-buttons .delete-btn {
+    height: 56px;
+    min-height: 56px;
+    margin: 0;
+    padding: 0 16px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.action-buttons .delete-btn {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    box-shadow: 0 12px 26px rgba(220, 38, 38, 0.20);
+}
+
+.action-buttons .delete-btn:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+}
+
+/* ===== Statusy ===== */
+
+.status-booked,
+.status-cancelled,
+.status-pending,
+.status-available,
+.status-completed {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.status-booked {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.status-cancelled {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.status-pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-available {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-completed {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+/* ===== Dzisiejsze wizyty ===== */
+
+.today-section {
+    border-top: 4px solid rgba(13, 148, 136, 0.18);
+}
+
+.today-appointment-card::before {
+    background: #0f766e;
+}
+
+/* ===== Stany puste / błędy ===== */
+
+.empty-state {
+    width: 100%;
+    padding: 22px 24px;
+    border-radius: 20px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    color: #64748b;
+    font-weight: 700;
+}
+
+.empty-state p {
+    margin: 0;
+}
+
+.error-state {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #991b1b;
+}
+
+/* ===== Historia pacjenta w panelu lekarza ===== */
+
+.patient-history-section {
+    border-top: 4px solid rgba(37, 99, 235, 0.16);
+}
+
+.patient-history-section.hidden {
+    display: none;
+}
+
+.patient-history-header {
+    align-items: flex-start;
+    gap: 18px;
+}
+
+.patient-link {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: max-content;
+    padding: 5px 12px !important;
+    border: 1px solid rgba(37, 99, 235, 0.18) !important;
+    border-radius: 999px !important;
+    background: #eff6ff !important;
+    color: #1d4ed8 !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    line-height: 1.2;
+    cursor: pointer;
+    box-shadow: none !important;
+}
+
+.patient-link:hover {
+    transform: translateY(-1px);
+    background: #dbeafe !important;
+}
+
+.compact-btn {
+    width: auto !important;
+    min-width: 120px;
+    padding: 10px 16px !important;
+    border-radius: 14px !important;
+    background: #e2e8f0 !important;
+    color: #334155 !important;
+    box-shadow: none !important;
+}
+
+.compact-btn:hover {
+    background: #cbd5e1 !important;
+    transform: translateY(-1px);
+}
+
+.history-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 18px 0 24px;
+}
+
+.history-filter {
+    width: auto !important;
+    padding: 9px 14px !important;
+    border-radius: 999px !important;
+    border: 1px solid #dbe4ee !important;
+    background: #ffffff !important;
+    color: #475569 !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    box-shadow: none !important;
+    cursor: pointer;
+}
+
+.history-filter:hover {
+    background: #eff6ff !important;
+    color: #1d4ed8 !important;
+    transform: translateY(-1px);
+}
+
+.history-filter.active {
+    background: #2563eb !important;
+    border-color: #2563eb !important;
+    color: #ffffff !important;
+}
+
+.history-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 320px));
+    gap: 16px;
+}
+
+.history-card::before {
+    background: #2563eb;
+}
+
+.compact-history-card {
+    padding: 20px 22px !important;
+    border-radius: 20px !important;
+}
+
+.compact-history-card p {
+    margin: 8px 0;
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.history-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.history-card-top strong {
+    font-size: 14px;
+    color: #111827;
+}
+
+/* ===== Responsywność ===== */
+
 @media (max-width: 900px) {
     .dashboard-page {
         padding: 20px;
@@ -380,7 +594,8 @@ button:hover {
     #appointmentsContainer,
     #usersContainer,
     #doctorsContainer,
-    #statsContainer {
+    #statsContainer,
+    .history-grid {
         grid-template-columns: 1fr;
     }
 
@@ -392,136 +607,14 @@ button:hover {
     .filter-box select {
         width: 100%;
     }
-}
 
-.status-pending {
-    display: inline-block;
-    padding: 5px 12px;
-    border-radius: 999px;
-    background-color: #fef3c7;
-    color: #92400e;
-    font-weight: 800;
-    font-size: 13px;
-}
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+    }
 
-.action-buttons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-top: 14px;
-    align-items: stretch;
-}
-
-.action-buttons .approve-btn,
-.action-buttons .delete-btn {
-    height: 56px;
-    min-height: 56px;
-    margin: 0;
-    padding: 0 16px;
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
-}
-
-.approve-btn {
-    background: linear-gradient(135deg, #22c55e, #16a34a);
-    box-shadow: 0 12px 26px rgba(22, 163, 74, 0.20);
-}
-
-.approve-btn:hover {
-    background: linear-gradient(135deg, #16a34a, #15803d);
-}
-
-.action-buttons .delete-btn {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
-    box-shadow: 0 12px 26px rgba(220, 38, 38, 0.20);
-}
-
-.action-buttons .delete-btn:hover {
-    background: linear-gradient(135deg, #dc2626, #b91c1c);
-}
-
-.status-available {
-    display: inline-block;
-    padding: 5px 12px;
-    border-radius: 999px;
-    background-color: #dbeafe;
-    color: #1d4ed8;
-    font-weight: 800;
-    font-size: 13px;
-}
-
-.today-section {
-    border-top: 4px solid rgba(13, 148, 136, 0.18);
-}
-
-.today-appointment-card {
-    border-left-color: #0f766e;
-}
-
-.empty-state {
-    width: 100%;
-    padding: 26px 28px;
-    border-radius: 24px;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    color: #64748b;
-    font-weight: 700;
-}
-
-.empty-state p {
-    margin: 0;
-}
-
-.error-state {
-    background: #fef2f2;
-    border-color: #fecaca;
-    color: #991b1b;
-}
-
-.status-completed {
-    display: inline-block;
-    padding: 5px 10px;
-    border-radius: 999px;
-    background: #e5e7eb;
-    color: #374151;
-    font-weight: 700;
-}
-
-.status-available {
-    display: inline-block;
-    padding: 5px 10px;
-    border-radius: 999px;
-    background: #dcfce7;
-    color: #166534;
-    font-weight: 700;
-}
-
-.status-booked {
-    display: inline-block;
-    padding: 5px 10px;
-    border-radius: 999px;
-    background: #dbeafe;
-    color: #1d4ed8;
-    font-weight: 700;
-}
-
-.status-cancelled {
-    display: inline-block;
-    padding: 5px 10px;
-    border-radius: 999px;
-    background: #fee2e2;
-    color: #991b1b;
-    font-weight: 700;
-}
-
-.status-pending {
-    display: inline-block;
-    padding: 5px 10px;
-    border-radius: 999px;
-    background: #fef3c7;
-    color: #92400e;
-    font-weight: 700;
+    .compact-btn {
+        width: 100% !important;
+    }
 }

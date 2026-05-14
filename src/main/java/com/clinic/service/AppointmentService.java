@@ -230,6 +230,26 @@ public class AppointmentService {
                 .collect(Collectors.toList());
     }
 
+    public List<AppointmentResponse> getPatientHistoryForDoctor(Long patientId, String doctorEmail) {
+        updatePastSlotsAndAppointments();
+
+        boolean hasAccess = appointmentRepository
+                .existsByPatientIdAndAppointmentSlotDoctorUserEmail(patientId, doctorEmail);
+
+        if (!hasAccess) {
+            throw new BusinessValidationException("You do not have access to this patient's history");
+        }
+
+        return appointmentRepository
+                .findByPatientIdAndAppointmentSlotDoctorUserEmailOrderByAppointmentSlotStartTimeDesc(
+                        patientId,
+                        doctorEmail
+                )
+                .stream()
+                .map(this::mapToAppointmentResponse)
+                .collect(Collectors.toList());
+    }
+
     private void updatePastSlotsAndAppointments() {
         LocalDateTime now = LocalDateTime.now();
 
@@ -264,6 +284,7 @@ public class AppointmentService {
     private AppointmentResponse mapToAppointmentResponse(Appointment appointment) {
         return new AppointmentResponse(
                 appointment.getId(),
+                appointment.getPatient().getId(),
                 appointment.getAppointmentSlot().getDoctor().getFirstName() + " " +
                         appointment.getAppointmentSlot().getDoctor().getLastName(),
                 appointment.getAppointmentSlot().getDoctor().getSpecialization(),

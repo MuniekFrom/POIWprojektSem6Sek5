@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 public class AppointmentResponse {
 
     private Long id;
+    private Long patientId;
     private String doctorName;
     private String specialization;
     private String patientName;
@@ -17,10 +18,11 @@ public class AppointmentResponse {
     public AppointmentResponse() {
     }
 
-    public AppointmentResponse(Long id, String doctorName, String specialization, String patientName,
+    public AppointmentResponse(Long id, Long patientId, String doctorName, String specialization, String patientName,
                                LocalDateTime startTime, LocalDateTime endTime,
                                LocalDateTime bookedAt, String reason, String status) {
         this.id = id;
+        this.patientId = patientId;
         this.doctorName = doctorName;
         this.specialization = specialization;
         this.patientName = patientName;
@@ -33,6 +35,10 @@ public class AppointmentResponse {
 
     public Long getId() {
         return id;
+    }
+
+    public Long getPatientId() {
+        return patientId;
     }
 
     public String getDoctorName() {
@@ -69,6 +75,10 @@ public class AppointmentResponse {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void setPatientId(Long patientId) {
+        this.patientId = patientId;
     }
 
     public void setDoctorName(String doctorName) {

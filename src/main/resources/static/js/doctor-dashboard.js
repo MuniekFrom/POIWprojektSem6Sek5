@@ -1,9 +1,14 @@
+let selectedPatientHistory = [];
+let selectedPatientName = "";
+let currentHistoryFilter = "ALL";
+
 document.addEventListener("DOMContentLoaded", async () => {
     requireAuth("DOCTOR");
 
     setupTimeRounding();
     setupSlotForm();
     setupMinDateTime();
+    setupHistoryFilters();
 
     await loadDoctorProfile();
     await loadTodayAppointments();
@@ -26,6 +31,22 @@ function setupMinDateTime() {
     if (endTimeInput) {
         endTimeInput.min = minDateTime;
     }
+}
+
+function setupHistoryFilters() {
+    document.querySelectorAll(".history-filter").forEach(button => {
+        button.addEventListener("click", () => {
+            currentHistoryFilter = button.dataset.historyFilter;
+
+            document.querySelectorAll(".history-filter").forEach(btn => {
+                btn.classList.remove("active");
+            });
+
+            button.classList.add("active");
+
+            renderPatientHistory();
+        });
+    });
 }
 
 function setupTimeRounding() {
@@ -131,10 +152,16 @@ async function loadTodayAppointments() {
         container.innerHTML = appointments.map(appointment => `
             <div class="slot-card today-appointment-card">
                 <p><strong>ID:</strong> ${appointment.id}</p>
-                <p><strong>Pacjent:</strong> ${appointment.patientName}</p>
+
+                <p>
+                    <strong>Pacjent:</strong>
+                    ${renderPatientLink(appointment.patientId, appointment.patientName)}
+                </p>
+
                 <p><strong>Start:</strong> ${formatDate(appointment.startTime)}</p>
                 <p><strong>Koniec:</strong> ${formatDate(appointment.endTime)}</p>
                 <p><strong>Powód:</strong> ${appointment.reason || "Brak powodu"}</p>
+
                 <p>
                     <strong>Status:</strong>
                     <span class="${getStatusClass(appointment.status)}">
@@ -185,12 +212,18 @@ async function loadDoctorSlots() {
                 <p><strong>ID:</strong> ${slot.id}</p>
                 <p><strong>Start:</strong> ${formatDate(slot.startTime)}</p>
                 <p><strong>Koniec:</strong> ${formatDate(slot.endTime)}</p>
+
                 <p>
                     <strong>Status:</strong>
                     <span class="${getStatusClass(slot.status)}">
                         ${translateSlotStatus(slot.status)}
                     </span>
                 </p>
+
+                ${slot.patientId && slot.patientName
+                    ? `<p><strong>Pacjent:</strong> ${renderPatientLink(slot.patientId, slot.patientName)}</p>`
+                    : ""
+                }
 
                 ${slot.status === "AVAILABLE"
                     ? `<button class="delete-btn" onclick="deleteSlot(${slot.id})">Usuń</button>`
@@ -205,6 +238,166 @@ async function loadDoctorSlots() {
                 <p>Nie udało się pobrać slotów.</p>
             </div>
         `;
+    }
+}
+
+function renderPatientLink(patientId, patientName) {
+    if (!patientId || !patientName) {
+        return `<span>Brak danych pacjenta</span>`;
+    }
+
+    return `
+        <button type="button"
+                class="patient-link"
+                onclick="loadPatientHistory(${patientId}, '${escapeForAttribute(patientName)}')">
+            ${escapeHtml(patientName)}
+        </button>
+    `;
+}
+
+async function loadPatientHistory(patientId, patientName) {
+    const section = document.getElementById("patientHistorySection");
+    const title = document.getElementById("patientHistoryTitle");
+    const subtitle = document.getElementById("patientHistorySubtitle");
+    const container = document.getElementById("patientHistoryContainer");
+
+    if (!section || !title || !subtitle || !container) {
+        return;
+    }
+
+    section.classList.remove("hidden");
+
+    selectedPatientName = patientName;
+    selectedPatientHistory = [];
+    currentHistoryFilter = "ALL";
+
+    document.querySelectorAll(".history-filter").forEach(button => {
+        button.classList.toggle("active", button.dataset.historyFilter === "ALL");
+    });
+
+    title.textContent = "Historia wizyt pacjenta";
+    subtitle.textContent = `Pacjent: ${patientName}`;
+
+    container.innerHTML = `
+        <div class="empty-state">
+            <p>Ładowanie historii wizyt...</p>
+        </div>
+    `;
+
+    try {
+        const token = getToken();
+
+        const response = await fetch(`${API_BASE_URL}/appointments/doctor/patients/${patientId}/history`, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            let errorMessage = "Nie udało się pobrać historii pacjenta.";
+
+            try {
+                const errorData = await response.json();
+                errorMessage = translateBackendError(errorData.message) || errorMessage;
+            } catch (e) {}
+
+            throw new Error(errorMessage);
+        }
+
+        selectedPatientHistory = await response.json();
+
+        renderPatientHistory();
+
+        section.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+    } catch (error) {
+        container.innerHTML = `
+            <div class="empty-state error-state">
+                <p>${error.message}</p>
+            </div>
+        `;
+    }
+}
+
+function renderPatientHistory() {
+    const container = document.getElementById("patientHistoryContainer");
+
+    if (!container) {
+        return;
+    }
+
+    const filteredAppointments = selectedPatientHistory.filter(appointment => {
+        if (currentHistoryFilter === "ALL") {
+            return true;
+        }
+
+        return appointment.status === currentHistoryFilter;
+    });
+
+    if (!filteredAppointments.length) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <p>Brak wizyt dla wybranego filtra.</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = filteredAppointments.map(appointment => `
+        <div class="slot-card history-card compact-history-card">
+            <div class="history-card-top">
+                <strong>${formatDate(appointment.startTime)}</strong>
+                <span class="${getStatusClass(appointment.status)}">
+                    ${translateAppointmentStatus(appointment.status)}
+                </span>
+            </div>
+
+            <p><strong>ID wizyty:</strong> ${appointment.id}</p>
+            <p><strong>Pacjent:</strong> ${appointment.patientName}</p>
+            <p><strong>Lekarz:</strong> ${appointment.doctorName}</p>
+            <p><strong>Specjalizacja:</strong> ${appointment.specialization}</p>
+            <p><strong>Koniec:</strong> ${formatDate(appointment.endTime)}</p>
+            <p><strong>Data rezerwacji:</strong> ${formatDate(appointment.bookedAt)}</p>
+            <p><strong>Powód:</strong> ${appointment.reason || "Brak powodu"}</p>
+        </div>
+    `).join("");
+}
+
+function closePatientHistory() {
+    const section = document.getElementById("patientHistorySection");
+    const title = document.getElementById("patientHistoryTitle");
+    const subtitle = document.getElementById("patientHistorySubtitle");
+    const container = document.getElementById("patientHistoryContainer");
+
+    selectedPatientHistory = [];
+    selectedPatientName = "";
+    currentHistoryFilter = "ALL";
+
+    if (title) {
+        title.textContent = "Historia wizyt pacjenta";
+    }
+
+    if (subtitle) {
+        subtitle.textContent = "Kliknij pacjenta w dzisiejszych wizytach albo w zarezerwowanym slocie.";
+    }
+
+    if (container) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <p>Wybierz pacjenta, aby zobaczyć historię wizyt.</p>
+            </div>
+        `;
+    }
+
+    document.querySelectorAll(".history-filter").forEach(button => {
+        button.classList.toggle("active", button.dataset.historyFilter === "ALL");
+    });
+
+    if (section) {
+        section.classList.add("hidden");
     }
 }
 
@@ -279,6 +472,10 @@ function setupSlotForm() {
 }
 
 function formatDate(dateString) {
+    if (!dateString) {
+        return "Brak danych";
+    }
+
     const date = new Date(dateString);
 
     return date.toLocaleString("pl-PL", {
@@ -387,7 +584,25 @@ function translateBackendError(message) {
             return "Nie można usunąć zarezerwowanego slotu.";
         case "Cannot delete completed slot":
             return "Nie można usunąć slotu, który już się odbył.";
+        case "You do not have access to this patient's history":
+            return "Nie masz dostępu do historii tego pacjenta.";
         default:
             return message;
     }
+}
+
+function escapeHtml(value) {
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+function escapeForAttribute(value) {
+    return String(value)
+        .replaceAll("\\", "\\\\")
+        .replaceAll("'", "\\'")
+        .replaceAll('"', "&quot;");
 }

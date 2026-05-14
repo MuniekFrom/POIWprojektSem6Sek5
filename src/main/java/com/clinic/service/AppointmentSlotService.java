@@ -4,15 +4,19 @@ import com.clinic.dto.AppointmentSlotResponse;
 import com.clinic.dto.CreateAppointmentSlotRequest;
 import com.clinic.exception.BusinessValidationException;
 import com.clinic.exception.ResourceNotFoundException;
+import com.clinic.model.Appointment;
 import com.clinic.model.AppointmentSlot;
 import com.clinic.model.Doctor;
 import com.clinic.model.enums.AppointmentSlotStatus;
+import com.clinic.model.enums.AppointmentStatus;
+import com.clinic.repository.AppointmentRepository;
 import com.clinic.repository.AppointmentSlotRepository;
 import com.clinic.repository.DoctorRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,11 +24,14 @@ public class AppointmentSlotService {
 
     private final AppointmentSlotRepository appointmentSlotRepository;
     private final DoctorRepository doctorRepository;
+    private final AppointmentRepository appointmentRepository;
 
     public AppointmentSlotService(AppointmentSlotRepository appointmentSlotRepository,
-                                  DoctorRepository doctorRepository) {
+                                  DoctorRepository doctorRepository,
+                                  AppointmentRepository appointmentRepository) {
         this.appointmentSlotRepository = appointmentSlotRepository;
         this.doctorRepository = doctorRepository;
+        this.appointmentRepository = appointmentRepository;
     }
 
     public AppointmentSlotResponse createSlot(CreateAppointmentSlotRequest request, String email) {
@@ -133,13 +140,36 @@ public class AppointmentSlotService {
     }
 
     private AppointmentSlotResponse mapToAppointmentSlotResponse(AppointmentSlot slot) {
+        Long patientId = null;
+        String patientName = null;
+
+        if (slot.getStatus() == AppointmentSlotStatus.BOOKED ||
+                slot.getStatus() == AppointmentSlotStatus.COMPLETED) {
+
+            Optional<Appointment> appointmentOptional =
+                    appointmentRepository.findFirstByAppointmentSlotIdAndStatusIn(
+                            slot.getId(),
+                            List.of(AppointmentStatus.BOOKED, AppointmentStatus.COMPLETED)
+                    );
+
+            if (appointmentOptional.isPresent()) {
+                Appointment appointment = appointmentOptional.get();
+
+                patientId = appointment.getPatient().getId();
+                patientName = appointment.getPatient().getFirstName() + " " +
+                        appointment.getPatient().getLastName();
+            }
+        }
+
         return new AppointmentSlotResponse(
                 slot.getId(),
                 slot.getDoctor().getFirstName() + " " + slot.getDoctor().getLastName(),
                 slot.getDoctor().getSpecialization(),
                 slot.getStartTime(),
                 slot.getEndTime(),
-                slot.getStatus().name()
+                slot.getStatus().name(),
+                patientId,
+                patientName
         );
     }
 }

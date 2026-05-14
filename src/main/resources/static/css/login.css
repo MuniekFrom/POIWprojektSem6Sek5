@@ -1,11 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600;700&display=swap');
 
-*, *::before, *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
 .auth-body {
     font-family: 'Inter', sans-serif;
     min-height: 100vh;
@@ -34,7 +28,9 @@
 }
 
 .login-page::before,
-.register-page::before {
+.register-page::before,
+.login-page::after,
+.register-page::after {
     content: '';
     position: fixed;
     inset: 0;
@@ -61,11 +57,6 @@
 
 .login-page::after,
 .register-page::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
     background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(15,23,42,.08));
 }
 
@@ -206,7 +197,7 @@
     color: #7c3aed;
 }
 
-h1 {
+.auth-card h1 {
     font-family: 'Playfair Display', serif;
     font-size: 34px;
     font-weight: 900;
@@ -229,6 +220,8 @@ h1 {
 .register-card .auth-subtitle {
     margin-bottom: 18px;
 }
+
+/* ===== Zakładki rejestracji ===== */
 
 .tabs {
     display: grid;
@@ -276,6 +269,8 @@ h1 {
     color: #2563eb;
 }
 
+/* ===== Formularze ===== */
+
 .field {
     margin-bottom: 18px;
 }
@@ -284,7 +279,7 @@ h1 {
     margin-bottom: 12px;
 }
 
-label {
+.auth-card label {
     display: block;
     font-size: 13px;
     font-weight: 700;
@@ -297,9 +292,9 @@ label {
     margin-bottom: 6px;
 }
 
-input[type="email"],
-input[type="password"],
-input[type="text"] {
+.auth-card input[type="email"],
+.auth-card input[type="password"],
+.auth-card input[type="text"] {
     width: 100%;
     padding: 14px 16px;
     border: 1.5px solid #dbe4ee;
@@ -320,13 +315,13 @@ input[type="text"] {
     font-size: 14px;
 }
 
-input:focus {
+.auth-card input:focus {
     border-color: #2563eb;
     background: #fff;
     box-shadow: 0 0 0 4px rgba(37,99,235,.10);
 }
 
-input::placeholder {
+.auth-card input::placeholder {
     color: #94a3b8;
 }
 
@@ -370,6 +365,8 @@ input::placeholder {
     display: none !important;
 }
 
+/* ===== Przyciski ===== */
+
 .submit-btn {
     width: 100%;
     padding: 16px;
@@ -405,6 +402,8 @@ input::placeholder {
     box-shadow: 0 20px 44px rgba(5,150,105,.32);
 }
 
+/* ===== Komunikaty ===== */
+
 #errorMessage,
 #registerMessage {
     font-size: 13px;
@@ -429,6 +428,8 @@ input::placeholder {
 .error-message {
     color: #dc2626;
 }
+
+/* ===== Linki przełączające ===== */
 
 .divider {
     display: flex;
@@ -471,6 +472,8 @@ input::placeholder {
     text-decoration: underline;
 }
 
+/* ===== Responsywność ===== */
+
 @media (max-width: 480px) {
     .auth-body {
         padding: 12px;
@@ -495,7 +498,7 @@ input::placeholder {
         gap: 0;
     }
 
-    h1 {
+    .auth-card h1 {
         font-size: 28px;
     }
 
