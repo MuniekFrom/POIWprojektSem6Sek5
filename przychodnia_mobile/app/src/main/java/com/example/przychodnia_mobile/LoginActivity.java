@@ -1,10 +1,12 @@
 package com.example.przychodnia_mobile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import retrofit2.Call;
@@ -18,6 +20,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText etUsername;
     private EditText etPassword;
     private Button btnLogin;
+    private TextView tvRegister;
 
     private ApiService apiService;
     private TokenManager tokenManager;
@@ -33,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
+        tvRegister = findViewById(R.id.tvRegister);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,6 +49,14 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     handleLogin(username, password);
                 }
+            }
+        });
+
+        tvRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -61,6 +73,10 @@ public class LoginActivity extends AppCompatActivity {
 
                     Toast.makeText(LoginActivity.this, "Zalogowano pomyślnie!", Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "Token zapisany: " + jwtToken);
+
+                    Intent intent = new Intent(LoginActivity.this, PatientPanelActivity.class);
+                    startActivity(intent);
+                    finish();
 
                 } else {
                     Log.e(TAG, "Błąd logowania. Kod: " + response.code());

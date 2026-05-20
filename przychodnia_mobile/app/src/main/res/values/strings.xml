@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">przychodnia_mobile</string>
+    <string name="patient_id">ID: %1$d</string>
+    <string name="patient_first_name">Imię: %1$s</string>
+    <string name="patient_last_name">Nazwisko: %1$s</string>
+    <string name="patient_pesel">PESEL: %1$s</string>
+    <string name="patient_phone">Telefon: %1$s</string>
+    <string name="no_phone">Brak</string>
+    <string name="error_fetching_data">Nie udało się pobrać danych pacjenta</string>
+    <string name="error_connection">Błąd połączenia z serwerem!</string>
 </resources>

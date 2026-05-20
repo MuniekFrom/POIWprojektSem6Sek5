@@ -7,4 +7,7 @@
     <color name="text_main">#1F2937</color>
     <color name="text_secondary">#4B5563</color>
     <color name="border_color">#D1D5DB</color>
+    <color name="teal_700">#0D9488</color>
+    <color name="card_bg">#FFFFFF</color>
+    <color name="step_bg">#F9FAFB</color>
 </resources>
