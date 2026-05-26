@@ -198,19 +198,6 @@ public class AppointmentService {
         appointmentRepository.save(appointment);
     }
 
-    public void deleteUserByAdmin(Long userId, String adminEmail) {
-        User admin = userRepository.findByEmail(adminEmail)
-                .orElseThrow(() -> new ResourceNotFoundException("Admin not found"));
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
-
-        if (admin.getId().equals(user.getId())) {
-            throw new BusinessValidationException("Admin cannot delete own account");
-        }
-
-        userRepository.delete(user);
-    }
 
     public List<AppointmentResponse> getTodayAppointmentsForDoctor(String email) {
         updatePastSlotsAndAppointments();

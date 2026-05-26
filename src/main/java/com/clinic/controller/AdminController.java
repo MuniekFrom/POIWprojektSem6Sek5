@@ -1,12 +1,18 @@
 package com.clinic.controller;
 
+import com.clinic.dto.AdminUserResponse;
 import com.clinic.dto.AppointmentResponse;
 import com.clinic.exception.BusinessValidationException;
 import com.clinic.exception.ResourceNotFoundException;
 import com.clinic.model.User;
 import com.clinic.model.enums.Role;
 import com.clinic.model.enums.UserStatus;
-import com.clinic.repository.*;
+import com.clinic.repository.AppointmentRepository;
+import com.clinic.repository.AppointmentSlotRepository;
+import com.clinic.repository.DoctorRepository;
+import com.clinic.repository.PatientRepository;
+import com.clinic.repository.UserRepository;
+import com.clinic.service.AdminUserService;
 import com.clinic.service.AppointmentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -25,19 +31,22 @@ public class AdminController {
     private final PatientRepository patientRepository;
     private final AppointmentRepository appointmentRepository;
     private final AppointmentSlotRepository appointmentSlotRepository;
+    private final AdminUserService adminUserService;
 
     public AdminController(UserRepository userRepository,
                            AppointmentService appointmentService,
                            DoctorRepository doctorRepository,
                            PatientRepository patientRepository,
                            AppointmentRepository appointmentRepository,
-                           AppointmentSlotRepository appointmentSlotRepository) {
+                           AppointmentSlotRepository appointmentSlotRepository,
+                           AdminUserService adminUserService) {
         this.userRepository = userRepository;
         this.appointmentService = appointmentService;
         this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
         this.appointmentRepository = appointmentRepository;
         this.appointmentSlotRepository = appointmentSlotRepository;
+        this.adminUserService = adminUserService;
     }
 
     @GetMapping("/me")
@@ -49,18 +58,18 @@ public class AdminController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<Map<String, Object>>> getAllUsers() {
-        return ResponseEntity.ok(
-                userRepository.findAll()
-                        .stream()
-                        .map(user -> Map.<String, Object>of(
-                                "id", user.getId(),
-                                "email", user.getEmail(),
-                                "role", user.getRole().name(),
-                                "status", user.getStatus().name()
-                        ))
-                        .toList()
-        );
+    public ResponseEntity<List<AdminUserResponse>> getAllUsers() {
+        return ResponseEntity.ok(adminUserService.getAllUsers());
+    }
+
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<Void> deleteUser(
+            @PathVariable Long userId,
+            Authentication authentication
+    ) {
+        String adminEmail = authentication.getName();
+        adminUserService.deleteUserByAdmin(userId, adminEmail);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/doctors/pending")
@@ -125,12 +134,6 @@ public class AdminController {
     @DeleteMapping("/appointments/{appointmentId}")
     public ResponseEntity<Void> deleteAppointment(@PathVariable Long appointmentId) {
         appointmentService.deleteAppointmentByAdmin(appointmentId);
-        return ResponseEntity.noContent().build();
-    }
-
-    @DeleteMapping("/users/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long userId, Authentication authentication) {
-        appointmentService.deleteUserByAdmin(userId, authentication.getName());
         return ResponseEntity.noContent().build();
     }
 

@@ -36,7 +36,7 @@ async function loadAdminProfile() {
 
         container.innerHTML = `
             <p><strong>Email:</strong> ${admin.email}</p>
-            <p><strong>Rola:</strong> ${admin.role}</p>
+            <p><strong>Rola:</strong> ${translateRole(admin.role)}</p>
         `;
     } catch (error) {
         container.innerHTML = "Nie udało się pobrać danych administratora.";
@@ -62,7 +62,11 @@ async function loadUsers() {
         const users = await response.json();
 
         if (!users.length) {
-            container.innerHTML = "<p>Brak użytkowników.</p>";
+            container.innerHTML = `
+                <div class="empty-state">
+                    <p>Brak użytkowników.</p>
+                </div>
+            `;
             return;
         }
 
@@ -71,7 +75,12 @@ async function loadUsers() {
                 <p><strong>ID:</strong> ${user.id}</p>
                 <p><strong>Email:</strong> ${user.email}</p>
                 <p><strong>Rola:</strong> ${translateRole(user.role)}</p>
-                <p><strong>Status:</strong> ${translateStatus(user.status)}</p>
+                <p>
+                    <strong>Status:</strong>
+                    <span class="${getStatusClass(user.status)}">
+                        ${translateStatus(user.status)}
+                    </span>
+                </p>
 
                 ${user.role !== "ADMIN"
                     ? `<button class="delete-btn" onclick="deleteUser(${user.id})">Usuń użytkownika</button>`
@@ -81,7 +90,11 @@ async function loadUsers() {
         `).join("");
 
     } catch (error) {
-        container.innerHTML = "Nie udało się pobrać użytkowników.";
+        container.innerHTML = `
+            <div class="empty-state error-state">
+                <p>Nie udało się pobrać użytkowników.</p>
+            </div>
+        `;
     }
 }
 
@@ -106,7 +119,11 @@ async function loadAllAppointments() {
         renderAppointments();
 
     } catch (error) {
-        container.innerHTML = "Nie udało się pobrać wizyt.";
+        container.innerHTML = `
+            <div class="empty-state error-state">
+                <p>Nie udało się pobrać wizyt.</p>
+            </div>
+        `;
     }
 }
 
@@ -124,44 +141,53 @@ function renderAppointments() {
     });
 
     if (!filteredAppointments.length) {
-        container.innerHTML = "<p>Brak wizyt dla wybranego filtra.</p>";
+        container.innerHTML = `
+            <div class="empty-state">
+                <p>Brak wizyt dla wybranego filtra.</p>
+            </div>
+        `;
         return;
     }
 
-    container.innerHTML = filteredAppointments.map(a => `
+    container.innerHTML = filteredAppointments.map(appointment => `
         <div class="slot-card">
-            <p><strong>ID:</strong> ${a.id}</p>
-            <p><strong>Lekarz:</strong> ${a.doctorName}</p>
-            <p><strong>Pacjent:</strong> ${a.patientName}</p>
-            <p><strong>Start:</strong> ${formatDate(a.startTime)}</p>
-            <p><strong>Koniec:</strong> ${formatDate(a.endTime)}</p>
-            <p><strong>Powód:</strong> ${a.reason}</p>
+            <p><strong>ID:</strong> ${appointment.id}</p>
+            <p><strong>Lekarz:</strong> ${appointment.doctorName}</p>
+            <p><strong>Pacjent:</strong> ${appointment.patientName}</p>
+            <p><strong>Start:</strong> ${formatDate(appointment.startTime)}</p>
+            <p><strong>Koniec:</strong> ${formatDate(appointment.endTime)}</p>
+            <p><strong>Powód:</strong> ${appointment.reason || "Brak powodu"}</p>
+
             <p>
                 <strong>Status:</strong>
-                <span class="${getStatusClass(a.status)}">
-                    ${translateStatus(a.status)}
+                <span class="${getStatusClass(appointment.status)}">
+                    ${translateStatus(appointment.status)}
                 </span>
             </p>
 
-            ${a.status === "BOOKED"
-                ? `<button class="delete-btn" onclick="deleteAppointment(${a.id})">
-                        Anuluj wizytę
-                   </button>`
-                : `<p class="cancelled-info">${getAppointmentInfoText(a.status)}</p>`
-            }
+            ${renderAppointmentAction(appointment)}
         </div>
     `).join("");
 }
 
-function getAppointmentInfoText(status) {
-    switch (status) {
-        case "CANCELLED":
-            return "Wizyta anulowana";
-        case "COMPLETED":
-            return "Wizyta odbyła się";
-        default:
-            return "";
+function renderAppointmentAction(appointment) {
+    if (appointment.status === "BOOKED") {
+        return `
+            <button class="delete-btn" onclick="deleteAppointment(${appointment.id})">
+                Anuluj wizytę
+            </button>
+        `;
     }
+
+    if (appointment.status === "COMPLETED") {
+        return `<p class="completed-info">Wizyta odbyła się</p>`;
+    }
+
+    if (appointment.status === "CANCELLED") {
+        return `<p class="cancelled-info">Wizyta anulowana</p>`;
+    }
+
+    return "";
 }
 
 async function deleteUser(userId) {
@@ -191,6 +217,7 @@ async function deleteUser(userId) {
         }
 
         alert("Użytkownik został usunięty.");
+
         await loadUsers();
         await loadStats();
 
@@ -199,7 +226,7 @@ async function deleteUser(userId) {
     }
 }
 
-async function deleteAppointment(id) {
+async function deleteAppointment(appointmentId) {
     if (!confirm("Na pewno anulować wizytę?")) {
         return;
     }
@@ -207,7 +234,7 @@ async function deleteAppointment(id) {
     try {
         const token = getToken();
 
-        const response = await fetch(`${API_BASE_URL}/admin/appointments/${id}`, {
+        const response = await fetch(`${API_BASE_URL}/admin/appointments/${appointmentId}`, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${token}`
@@ -226,23 +253,13 @@ async function deleteAppointment(id) {
         }
 
         alert("Wizyta została anulowana.");
+
         await loadAllAppointments();
+        await loadStats();
 
     } catch (error) {
         alert(error.message);
     }
-}
-
-function formatDate(dateString) {
-    const date = new Date(dateString);
-
-    return date.toLocaleString("pl-PL", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit"
-    });
 }
 
 async function loadStats() {
@@ -274,7 +291,11 @@ async function loadStats() {
         `;
 
     } catch (error) {
-        container.innerHTML = "Nie udało się pobrać statystyk.";
+        container.innerHTML = `
+            <div class="empty-state error-state">
+                <p>Nie udało się pobrać statystyk.</p>
+            </div>
+        `;
     }
 }
 
@@ -301,7 +322,11 @@ async function loadPendingDoctors() {
         const doctors = await response.json();
 
         if (!doctors.length) {
-            container.innerHTML = "<p>Brak oczekujących lekarzy.</p>";
+            container.innerHTML = `
+                <div class="empty-state">
+                    <p>Brak oczekujących lekarzy.</p>
+                </div>
+            `;
             return;
         }
 
@@ -328,7 +353,11 @@ async function loadPendingDoctors() {
         `).join("");
 
     } catch (error) {
-        container.innerHTML = "Nie udało się pobrać oczekujących lekarzy.";
+        container.innerHTML = `
+            <div class="empty-state error-state">
+                <p>Nie udało się pobrać oczekujących lekarzy.</p>
+            </div>
+        `;
     }
 }
 
@@ -392,16 +421,32 @@ async function rejectDoctor(userId) {
     }
 }
 
+function formatDate(dateString) {
+    if (!dateString) {
+        return "Brak danych";
+    }
+
+    const date = new Date(dateString);
+
+    return date.toLocaleString("pl-PL", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+}
+
 function translateStatus(status) {
     switch (status) {
         case "BOOKED":
             return "Zarezerwowana";
         case "CANCELLED":
             return "Anulowana";
+        case "COMPLETED":
+            return "Odbyła się";
         case "AVAILABLE":
             return "Dostępny";
-        case "COMPLETED":
-            return "Odbyło się";
         case "PENDING":
             return "Oczekuje";
         case "ACTIVE":
@@ -417,14 +462,18 @@ function getStatusClass(status) {
     switch (status) {
         case "BOOKED":
             return "status-booked";
-        case "AVAILABLE":
-            return "status-available";
         case "CANCELLED":
             return "status-cancelled";
         case "COMPLETED":
             return "status-completed";
+        case "AVAILABLE":
+            return "status-available";
         case "PENDING":
             return "status-pending";
+        case "ACTIVE":
+            return "status-available";
+        case "REJECTED":
+            return "status-cancelled";
         default:
             return "";
     }
@@ -449,6 +498,8 @@ function translateBackendError(message) {
             return "Nie można anulować wizyty, która już się odbyła.";
         case "Cannot cancel appointment that has already ended":
             return "Nie można anulować wizyty, która już się zakończyła.";
+        case "Appointment is already cancelled":
+            return "Ta wizyta jest już anulowana.";
         default:
             return message;
     }

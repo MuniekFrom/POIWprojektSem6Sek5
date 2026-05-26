@@ -281,6 +281,12 @@ button:hover {
     margin-top: 12px;
 }
 
+.completed-info {
+    color: #374151;
+    font-weight: 800;
+    margin-top: 12px;
+}
+
 .filter-box {
     margin: 16px 0 22px;
     display: flex;
