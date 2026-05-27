@@ -1,12 +1,23 @@
 let allAppointments = [];
+let appointmentsCollapsed = true;
 
 document.addEventListener("DOMContentLoaded", async () => {
     requireAuth("ADMIN");
 
     const appointmentStatusFilter = document.getElementById("appointmentStatusFilter");
+    const appointmentSearchInput = document.getElementById("appointmentSearchInput");
+    const appointmentsToggleBtn = document.getElementById("appointmentsToggleBtn");
 
     if (appointmentStatusFilter) {
         appointmentStatusFilter.addEventListener("change", renderAppointments);
+    }
+
+    if (appointmentSearchInput) {
+        appointmentSearchInput.addEventListener("input", renderAppointments);
+    }
+
+    if (appointmentsToggleBtn) {
+        appointmentsToggleBtn.addEventListener("click", toggleAppointmentsSection);
     }
 
     await loadAdminProfile();
@@ -130,20 +141,43 @@ async function loadAllAppointments() {
 function renderAppointments() {
     const container = document.getElementById("appointmentsContainer");
     const filterElement = document.getElementById("appointmentStatusFilter");
+    const searchInput = document.getElementById("appointmentSearchInput");
+
     const filter = filterElement ? filterElement.value : "ALL";
+    const searchValue = searchInput ? searchInput.value.trim().toLowerCase() : "";
+
+    if (appointmentsCollapsed) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <p>Sekcja wizyt jest zwinięta. Kliknij „Pokaż wizyty”, aby ją rozwinąć.</p>
+            </div>
+        `;
+        return;
+    }
 
     const filteredAppointments = allAppointments.filter(appointment => {
-        if (filter === "ALL") {
-            return true;
-        }
+        const matchesStatus = filter === "ALL" || appointment.status === filter;
 
-        return appointment.status === filter;
+        const doctorName = appointment.doctorName
+            ? appointment.doctorName.toLowerCase()
+            : "";
+
+        const patientName = appointment.patientName
+            ? appointment.patientName.toLowerCase()
+            : "";
+
+        const matchesSearch =
+            !searchValue ||
+            doctorName.includes(searchValue) ||
+            patientName.includes(searchValue);
+
+        return matchesStatus && matchesSearch;
     });
 
     if (!filteredAppointments.length) {
         container.innerHTML = `
             <div class="empty-state">
-                <p>Brak wizyt dla wybranego filtra.</p>
+                <p>Brak wizyt dla wybranych filtrów.</p>
             </div>
         `;
         return;
@@ -168,6 +202,18 @@ function renderAppointments() {
             ${renderAppointmentAction(appointment)}
         </div>
     `).join("");
+}
+
+function toggleAppointmentsSection() {
+    const button = document.getElementById("appointmentsToggleBtn");
+
+    appointmentsCollapsed = !appointmentsCollapsed;
+
+    if (button) {
+        button.textContent = appointmentsCollapsed ? "Pokaż wizyty" : "Zwiń wizyty";
+    }
+
+    renderAppointments();
 }
 
 function renderAppointmentAction(appointment) {
@@ -210,7 +256,7 @@ async function deleteUser(userId) {
 
             try {
                 const errorData = await response.json();
-                errorMessage = errorData.message || errorMessage;
+                errorMessage = translateBackendError(errorData.message) || errorMessage;
             } catch (e) {}
 
             throw new Error(errorMessage);
@@ -500,6 +546,8 @@ function translateBackendError(message) {
             return "Nie można anulować wizyty, która już się zakończyła.";
         case "Appointment is already cancelled":
             return "Ta wizyta jest już anulowana.";
+        case "Cannot delete doctor with appointment history":
+            return "Nie można usunąć lekarza, który ma historię wizyt.";
         default:
             return message;
     }

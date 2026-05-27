@@ -25,4 +25,6 @@ public interface AppointmentSlotRepository extends JpaRepository<AppointmentSlot
             List<AppointmentSlotStatus> statuses
     );
 
+    List<AppointmentSlot> findByDoctorUserId(Long userId);
+
 }

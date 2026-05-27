@@ -87,17 +87,35 @@
             </div>
         </div>
 
-        <div class="filter-box">
-            <label for="appointmentStatusFilter">
-                <strong>Filtr wizyt:</strong>
-            </label>
+        <div class="appointments-toolbar">
+            <div class="filter-box">
+                <label for="appointmentStatusFilter">
+                    <strong>Status:</strong>
+                </label>
 
-            <select id="appointmentStatusFilter">
-                <option value="ALL">Wszystkie</option>
-                <option value="BOOKED">Aktualne</option>
-                <option value="COMPLETED">Odbyte</option>
-                <option value="CANCELLED">Anulowane</option>
-            </select>
+                <select id="appointmentStatusFilter">
+                    <option value="ALL">Wszystkie</option>
+                    <option value="BOOKED">Aktualne</option>
+                    <option value="COMPLETED">Odbyte</option>
+                    <option value="CANCELLED">Anulowane</option>
+                </select>
+            </div>
+
+            <div class="filter-box search-filter-box">
+                <label for="appointmentSearchInput">
+                    <strong>Szukaj:</strong>
+                </label>
+
+                <input
+                        type="text"
+                        id="appointmentSearchInput"
+                        placeholder="Wpisz lekarza lub pacjenta..."
+                >
+            </div>
+
+            <button type="button" class="toggle-section-btn" id="appointmentsToggleBtn">
+                Zwiń wizyty
+            </button>
         </div>
 
         <div id="appointmentsContainer" class="cards-grid">

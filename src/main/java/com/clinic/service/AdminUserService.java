@@ -7,6 +7,8 @@ import com.clinic.model.Doctor;
 import com.clinic.model.Patient;
 import com.clinic.model.User;
 import com.clinic.model.enums.Role;
+import com.clinic.repository.AppointmentRepository;
+import com.clinic.repository.AppointmentSlotRepository;
 import com.clinic.repository.DoctorRepository;
 import com.clinic.repository.PatientRepository;
 import com.clinic.repository.UserRepository;
@@ -21,13 +23,19 @@ public class AdminUserService {
     private final UserRepository userRepository;
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
+    private final AppointmentRepository appointmentRepository;
+    private final AppointmentSlotRepository appointmentSlotRepository;
 
     public AdminUserService(UserRepository userRepository,
                             DoctorRepository doctorRepository,
-                            PatientRepository patientRepository) {
+                            PatientRepository patientRepository,
+                            AppointmentRepository appointmentRepository,
+                            AppointmentSlotRepository appointmentSlotRepository) {
         this.userRepository = userRepository;
         this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
+        this.appointmentRepository = appointmentRepository;
+        this.appointmentSlotRepository = appointmentSlotRepository;
     }
 
     public List<AdminUserResponse> getAllUsers() {
@@ -49,21 +57,48 @@ public class AdminUserService {
         }
 
         if (user.getRole() == Role.DOCTOR) {
-            Doctor doctor = doctorRepository.findByUserId(userId)
-                    .orElse(null);
-
-            if (doctor != null) {
-                doctorRepository.delete(doctor);
-            }
+            deleteDoctorUser(user);
+            return;
         }
 
         if (user.getRole() == Role.PATIENT) {
-            Patient patient = patientRepository.findByUserId(userId)
-                    .orElse(null);
+            deletePatientUser(user);
+            return;
+        }
 
-            if (patient != null) {
-                patientRepository.delete(patient);
-            }
+        userRepository.delete(user);
+    }
+
+    private void deleteDoctorUser(User user) {
+        boolean doctorHasAppointments = appointmentRepository
+                .existsByAppointmentSlotDoctorUserId(user.getId());
+
+        if (doctorHasAppointments) {
+            throw new BusinessValidationException(
+                    "Cannot delete doctor with appointment history"
+            );
+        }
+
+        Doctor doctor = doctorRepository.findByUserId(user.getId())
+                .orElse(null);
+
+        if (doctor != null) {
+            appointmentSlotRepository.deleteAll(
+                    appointmentSlotRepository.findByDoctorUserId(user.getId())
+            );
+
+            doctorRepository.delete(doctor);
+        }
+
+        userRepository.delete(user);
+    }
+
+    private void deletePatientUser(User user) {
+        Patient patient = patientRepository.findByUserId(user.getId())
+                .orElse(null);
+
+        if (patient != null) {
+            patientRepository.delete(patient);
         }
 
         userRepository.delete(user);
