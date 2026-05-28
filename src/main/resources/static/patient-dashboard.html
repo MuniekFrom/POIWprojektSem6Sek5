@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Panel pacjenta</title>
-    <link rel="stylesheet" href="css/common.css">
-    <link rel="stylesheet" href="css/dashboard.css">
+    <<link rel="stylesheet" href="/css/common.css?v=12">
+    <link rel="stylesheet" href="/css/dashboard.css?v=12">
 </head>
 <body class="dashboard-page patient-page">
 
@@ -29,21 +29,22 @@
         <section class="action-card">
             <h2>Jak zarezerwować wizytę?</h2>
             <p class="section-description">
-                Wybierz lekarza z listy, sprawdź wolne terminy i podaj powód wizyty.
+                Sprawdź kalendarz wolnych terminów, wybierz dzień, godzinę oraz lekarza,
+                a następnie podaj powód wizyty.
             </p>
 
             <div class="info-list">
                 <div>
                     <strong>1</strong>
-                    <span>Wybierz lekarza</span>
+                    <span>Wybierz dzień w kalendarzu</span>
                 </div>
                 <div>
                     <strong>2</strong>
-                    <span>Sprawdź dostępne terminy</span>
+                    <span>Sprawdź lekarzy dostępnych tego dnia</span>
                 </div>
                 <div>
                     <strong>3</strong>
-                    <span>Zarezerwuj wizytę</span>
+                    <span>Zarezerwuj wybrany termin</span>
                 </div>
             </div>
         </section>
@@ -71,26 +72,49 @@
             </div>
         </div>
 
-        <div id="doctorsContainer" class="cards-grid"></div>
+        <div id="doctorsContainer" class="cards-grid">
+            Ładowanie lekarzy...
+        </div>
+    </section>
+
+    <section class="content-section">
+        <div class="section-header">
+            <div>
+                <p class="eyebrow">Kalendarz</p>
+                <h2>Kalendarz wolnych terminów</h2>
+            </div>
+        </div>
+
+        <p class="section-description">
+            Wybierz dzień, aby zobaczyć dostępne godziny u wszystkich lekarzy.
+        </p>
+
+        <div id="availableDatesContainer" class="availability-calendar">
+            Ładowanie kalendarza...
+        </div>
     </section>
 
     <section class="content-section">
         <div class="section-header">
             <div>
                 <p class="eyebrow">Terminy</p>
-                <h2>Wolne terminy</h2>
+                <h2 id="selectedDayTitle">Terminy wybranego dnia</h2>
             </div>
         </div>
 
-        <div id="slotsContainer" class="cards-grid"></div>
+        <div id="selectedDaySlotsContainer" class="cards-grid">
+            <div class="empty-state">
+                <p>Wybierz dzień z kalendarza, aby zobaczyć wolne terminy.</p>
+            </div>
+        </div>
     </section>
 
 </div>
 
-<script src="js/config.js"></script>
-<script src="js/api.js"></script>
-<script src="js/auth.js"></script>
-<script src="js/patient-dashboard.js"></script>
+<script src="/js/config.js"></script>
+<script src="/js/api.js?v=15"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/patient-dashboard.js?v=15"></script>
 
 </body>
 </html>

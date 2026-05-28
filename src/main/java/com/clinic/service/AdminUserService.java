@@ -13,6 +13,7 @@ import com.clinic.repository.DoctorRepository;
 import com.clinic.repository.PatientRepository;
 import com.clinic.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,6 +46,7 @@ public class AdminUserService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void deleteUserByAdmin(Long userId, String adminEmail) {
         User admin = userRepository.findByEmail(adminEmail)
                 .orElseThrow(() -> new ResourceNotFoundException("Admin not found"));
@@ -98,6 +100,15 @@ public class AdminUserService {
                 .orElse(null);
 
         if (patient != null) {
+            boolean patientHasAppointments = appointmentRepository
+                    .existsByPatientId(patient.getId());
+
+            if (patientHasAppointments) {
+                throw new BusinessValidationException(
+                        "Cannot delete patient with appointment history"
+                );
+            }
+
             patientRepository.delete(patient);
         }
 

@@ -27,6 +27,11 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.getAvailableSlots(doctorId));
     }
 
+    @GetMapping("/available/all")
+    public ResponseEntity<List<AppointmentSlotResponse>> getAllAvailableSlots() {
+        return ResponseEntity.ok(appointmentService.getAllAvailableSlots());
+    }
+
     @PostMapping("/book")
     public ResponseEntity<AppointmentResponse> bookAppointment(
             @Valid @RequestBody AppointmentRequest request,

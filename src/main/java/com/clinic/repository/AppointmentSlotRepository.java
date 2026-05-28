@@ -1,8 +1,8 @@
 package com.clinic.repository;
 
 import com.clinic.model.AppointmentSlot;
-import com.clinic.model.enums.AppointmentSlotStatus;
 import com.clinic.model.Doctor;
+import com.clinic.model.enums.AppointmentSlotStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
@@ -27,4 +27,8 @@ public interface AppointmentSlotRepository extends JpaRepository<AppointmentSlot
 
     List<AppointmentSlot> findByDoctorUserId(Long userId);
 
+    List<AppointmentSlot> findByStatusAndStartTimeAfter(
+            AppointmentSlotStatus status,
+            LocalDateTime now
+    );
 }

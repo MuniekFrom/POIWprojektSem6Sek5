@@ -99,14 +99,20 @@ public class AppointmentService {
         return appointmentSlotRepository.findByDoctorIdAndStatus(doctorId, AppointmentSlotStatus.AVAILABLE)
                 .stream()
                 .filter(slot -> slot.getStartTime().isAfter(LocalDateTime.now()))
-                .map(slot -> new AppointmentSlotResponse(
-                        slot.getId(),
-                        slot.getDoctor().getFirstName() + " " + slot.getDoctor().getLastName(),
-                        slot.getDoctor().getSpecialization(),
-                        slot.getStartTime(),
-                        slot.getEndTime(),
-                        slot.getStatus().name()
-                ))
+                .map(this::mapToAppointmentSlotResponse)
+                .collect(Collectors.toList());
+    }
+
+    public List<AppointmentSlotResponse> getAllAvailableSlots() {
+        updatePastSlotsAndAppointments();
+
+        return appointmentSlotRepository
+                .findByStatusAndStartTimeAfter(
+                        AppointmentSlotStatus.AVAILABLE,
+                        LocalDateTime.now()
+                )
+                .stream()
+                .map(this::mapToAppointmentSlotResponse)
                 .collect(Collectors.toList());
     }
 
@@ -198,7 +204,6 @@ public class AppointmentService {
         appointmentRepository.save(appointment);
     }
 
-
     public List<AppointmentResponse> getTodayAppointmentsForDoctor(String email) {
         updatePastSlotsAndAppointments();
 
@@ -266,6 +271,17 @@ public class AppointmentService {
         if (!oldAppointments.isEmpty()) {
             appointmentRepository.saveAll(oldAppointments);
         }
+    }
+
+    private AppointmentSlotResponse mapToAppointmentSlotResponse(AppointmentSlot slot) {
+        return new AppointmentSlotResponse(
+                slot.getId(),
+                slot.getDoctor().getFirstName() + " " + slot.getDoctor().getLastName(),
+                slot.getDoctor().getSpecialization(),
+                slot.getStartTime(),
+                slot.getEndTime(),
+                slot.getStatus().name()
+        );
     }
 
     private AppointmentResponse mapToAppointmentResponse(Appointment appointment) {

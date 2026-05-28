@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (appointmentsToggleBtn) {
+        appointmentsToggleBtn.textContent = appointmentsCollapsed ? "Pokaż wizyty" : "Zwiń wizyty";
         appointmentsToggleBtn.addEventListener("click", toggleAppointmentsSection);
     }
 
@@ -237,7 +238,12 @@ function renderAppointmentAction(appointment) {
 }
 
 async function deleteUser(userId) {
-    if (!confirm("Na pewno usunąć tego użytkownika?")) {
+    const confirmed = await window.showAppConfirm(
+        "Czy na pewno chcesz usunąć tego użytkownika?",
+        "Usuwanie użytkownika"
+    );
+
+    if (!confirmed) {
         return;
     }
 
@@ -262,18 +268,23 @@ async function deleteUser(userId) {
             throw new Error(errorMessage);
         }
 
-        alert("Użytkownik został usunięty.");
-
         await loadUsers();
         await loadStats();
 
+        window.showAppMessage("Użytkownik został usunięty.", "success");
+
     } catch (error) {
-        alert(error.message);
+        window.showAppMessage(error.message, "error");
     }
 }
 
 async function deleteAppointment(appointmentId) {
-    if (!confirm("Na pewno anulować wizytę?")) {
+    const confirmed = await window.showAppConfirm(
+        "Czy na pewno chcesz anulować tę wizytę?",
+        "Anulowanie wizyty"
+    );
+
+    if (!confirmed) {
         return;
     }
 
@@ -298,13 +309,13 @@ async function deleteAppointment(appointmentId) {
             throw new Error(errorMessage);
         }
 
-        alert("Wizyta została anulowana.");
-
         await loadAllAppointments();
         await loadStats();
 
+        window.showAppMessage("Wizyta została anulowana.", "success");
+
     } catch (error) {
-        alert(error.message);
+        window.showAppMessage(error.message, "error");
     }
 }
 
@@ -408,7 +419,12 @@ async function loadPendingDoctors() {
 }
 
 async function approveDoctor(userId) {
-    if (!confirm("Czy na pewno chcesz zatwierdzić tego lekarza?")) {
+    const confirmed = await window.showAppConfirm(
+        "Czy na pewno chcesz zatwierdzić tego lekarza?",
+        "Zatwierdzanie lekarza"
+    );
+
+    if (!confirmed) {
         return;
     }
 
@@ -426,19 +442,24 @@ async function approveDoctor(userId) {
             throw new Error("Nie udało się zatwierdzić lekarza.");
         }
 
-        alert("Lekarz został zatwierdzony.");
-
         await loadPendingDoctors();
         await loadUsers();
         await loadStats();
 
+        window.showAppMessage("Lekarz został zatwierdzony.", "success");
+
     } catch (error) {
-        alert(error.message);
+        window.showAppMessage(error.message, "error");
     }
 }
 
 async function rejectDoctor(userId) {
-    if (!confirm("Czy na pewno chcesz odrzucić tego lekarza?")) {
+    const confirmed = await window.showAppConfirm(
+        "Czy na pewno chcesz odrzucić tego lekarza?",
+        "Odrzucanie lekarza"
+    );
+
+    if (!confirmed) {
         return;
     }
 
@@ -456,14 +477,14 @@ async function rejectDoctor(userId) {
             throw new Error("Nie udało się odrzucić lekarza.");
         }
 
-        alert("Lekarz został odrzucony.");
-
         await loadPendingDoctors();
         await loadUsers();
         await loadStats();
 
+        window.showAppMessage("Lekarz został odrzucony.", "success");
+
     } catch (error) {
-        alert(error.message);
+        window.showAppMessage(error.message, "error");
     }
 }
 
@@ -538,6 +559,7 @@ function translateRole(role) {
     }
 }
 
+
 function translateBackendError(message) {
     switch (message) {
         case "Cannot cancel completed appointment":
@@ -548,6 +570,8 @@ function translateBackendError(message) {
             return "Ta wizyta jest już anulowana.";
         case "Cannot delete doctor with appointment history":
             return "Nie można usunąć lekarza, który ma historię wizyt.";
+        case "Cannot delete patient with appointment history":
+            return "Nie można usunąć pacjenta, który ma historię wizyt.";
         default:
             return message;
     }

@@ -458,15 +458,19 @@ function setupSlotForm() {
                 throw new Error(errorMessage);
             }
 
-            message.textContent = "Slot został dodany.";
+            message.textContent = "";
+
             form.reset();
 
             setupMinDateTime();
             await loadTodayAppointments();
             await loadDoctorSlots();
 
+            window.showAppMessage("Slot został dodany.", "success");
+
         } catch (error) {
-            message.textContent = error.message;
+            message.textContent = "";
+            window.showAppMessage(error.message, "error");
         }
     });
 }
@@ -492,7 +496,10 @@ function formatDateTimeForBackend(value) {
 }
 
 async function deleteSlot(slotId) {
-    const confirmed = confirm("Czy na pewno chcesz usunąć ten slot?");
+    const confirmed = await window.showAppConfirm(
+        "Czy na pewno chcesz usunąć ten slot?",
+        "Usuwanie slotu"
+    );
 
     if (!confirmed) {
         return;
@@ -522,8 +529,10 @@ async function deleteSlot(slotId) {
         await loadTodayAppointments();
         await loadDoctorSlots();
 
+        window.showAppMessage("Slot został usunięty.", "success");
+
     } catch (error) {
-        alert(error.message);
+        window.showAppMessage(error.message, "error");
     }
 }
 

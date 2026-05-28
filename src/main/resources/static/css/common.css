@@ -25,6 +25,8 @@ textarea {
     font-family: inherit;
 }
 
+/* ===== Przyciski ogólne ===== */
+
 .primary-btn,
 .secondary-btn {
     display: inline-block;
@@ -54,8 +56,15 @@ textarea {
     background: #eff6ff;
 }
 
+/* ===== Informacje tekstowe ===== */
+
 .cancelled-info {
     color: #991b1b;
+    font-weight: 700;
+}
+
+.completed-info {
+    color: #374151;
     font-weight: 700;
 }
 
@@ -96,4 +105,119 @@ textarea {
 .status-pending {
     background: #fef3c7;
     color: #92400e;
+}
+
+/* ===== Modal komunikatów i potwierdzeń ===== */
+
+.app-message-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(15, 23, 42, 0.45);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.app-message-box {
+    width: min(430px, 100%);
+    padding: 28px 30px;
+    border-radius: 26px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 30px 90px rgba(15, 23, 42, 0.32);
+    text-align: center;
+    animation: app-message-pop 0.22s ease;
+}
+
+.app-message-icon {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 27px;
+    font-weight: 900;
+}
+
+.app-message-icon.success {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.app-message-icon.error {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.app-message-icon.info {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+}
+
+.app-message-box h3 {
+    margin: 0 0 10px;
+    color: #0f172a;
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: -0.6px;
+}
+
+.app-message-box p {
+    margin: 0 0 22px;
+    color: #475569;
+    font-size: 16px;
+    line-height: 1.55;
+}
+
+.app-message-overlay .app-message-btn {
+    width: 100%;
+    min-height: 48px;
+    margin: 0;
+    padding: 13px 18px;
+    border: none;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 14px 30px rgba(37, 99, 235, 0.24);
+    transition: 0.2s ease;
+}
+
+.app-message-overlay .app-message-btn:hover {
+    transform: translateY(-1px);
+    background: linear-gradient(135deg, #1d4ed8, #1e40af);
+}
+
+.app-confirm-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.app-message-overlay .app-confirm-no {
+    background: #e2e8f0;
+    color: #334155;
+    box-shadow: none;
+}
+
+.app-message-overlay .app-confirm-no:hover {
+    background: #cbd5e1;
+}
+
+@keyframes app-message-pop {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
