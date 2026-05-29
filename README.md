@@ -1,120 +1,191 @@
-System zapisów do lekarza
+# System zapisów do lekarza
 
 Aplikacja webowa do obsługi zapisów pacjentów do lekarzy. Projekt został wykonany w technologii Spring Boot z bazą danych MySQL, Dockerem oraz prostym frontendem HTML/CSS/JavaScript.
 
-System umożliwia logowanie użytkowników z różnymi rolami: administrator, lekarz oraz pacjent. Każda rola posiada osobny panel i dostęp do innych funkcji.
+System posiada trzy role użytkowników: administrator, lekarz oraz pacjent. Każda rola ma osobny panel i dostęp do innych funkcji.
 
-Technologie
-Java
-Spring Boot
-Spring Web
-Spring Data JPA
-Spring Security
-JWT
-BCrypt
-MySQL
-Docker
-HTML
-CSS
-JavaScript
-Funkcje aplikacji
-Pacjent
+---
+
+## Technologie
+
+* Java
+* Spring Boot
+* Spring Web
+* Spring Data JPA
+* Spring Security
+* JWT
+* BCrypt
+* MySQL
+* Docker
+* HTML
+* CSS
+* JavaScript
+
+---
+
+## Funkcje aplikacji
+
+### Pacjent
 
 Pacjent może:
 
-zalogować się do systemu,
-przeglądać dostępnych lekarzy,
-sprawdzać wolne terminy wizyt,
-rezerwować wizyty,
-anulować swoje wizyty,
-przeglądać swoje zaplanowane wizyty.
-Lekarz
+* zalogować się do systemu,
+* przeglądać dostępnych lekarzy,
+* sprawdzać wolne terminy wizyt,
+* rezerwować wizyty,
+* anulować swoje wizyty,
+* przeglądać swoje zaplanowane wizyty.
+
+### Lekarz
 
 Lekarz może:
 
-zalogować się do systemu,
-dodawać wolne terminy wizyt,
-usuwać swoje wolne terminy,
-przeglądać dzisiejsze wizyty,
-sprawdzać historię wizyt pacjenta.
-Administrator
+* zalogować się do systemu,
+* dodawać wolne terminy wizyt,
+* usuwać swoje wolne terminy,
+* przeglądać dzisiejsze wizyty,
+* sprawdzać historię wizyt pacjenta.
+
+### Administrator
 
 Administrator może:
 
-przeglądać użytkowników,
-usuwać użytkowników bez historii wizyt,
-przeglądać wszystkie wizyty,
-filtrować i wyszukiwać wizyty,
-usuwać wizyty,
-sprawdzać statystyki systemu,
-akceptować lub odrzucać rejestracje lekarzy.
-Uruchomienie projektu
+* przeglądać użytkowników,
+* usuwać użytkowników bez historii wizyt,
+* przeglądać wszystkie wizyty,
+* filtrować i wyszukiwać wizyty,
+* usuwać wizyty,
+* sprawdzać statystyki systemu,
+* akceptować lub odrzucać rejestracje lekarzy.
+
+---
+
+## Uruchomienie projektu
 
 Projekt można uruchomić za pomocą Dockera.
 
 W katalogu głównym projektu należy wykonać:
 
+```bash
 docker compose up --build
+```
 
 Jeżeli baza danych była już wcześniej uruchamiana i trzeba ją zresetować, należy użyć:
 
+```bash
 docker compose down -v
 docker compose up --build
+```
+
+Komenda `docker compose down -v` usuwa poprzedni volume bazy danych, dzięki czemu aplikacja uruchomi się z czystą bazą i danymi startowymi z pliku `data.sql`.
 
 Po uruchomieniu aplikacja będzie dostępna pod adresem:
 
+```text
 http://localhost:8080
+```
 
 Strona logowania:
 
+```text
 http://localhost:8080/login.html
-Baza danych
+```
+
+---
+
+## Baza danych
 
 Aplikacja korzysta z bazy danych MySQL uruchamianej w Dockerze.
 
 Domyślna baza:
 
+```text
 clinic_db
+```
 
 Dane do połączenia z bazą przez MySQL Workbench:
 
+```text
 Host: 127.0.0.1
 Port: 3307
 User: root
 Password: password
 Database: clinic_db
+```
 
 Dane startowe są ładowane z pliku:
 
+```text
 src/main/resources/data.sql
+```
 
 Po uruchomieniu projektu na czystej bazie zostaną automatycznie dodani przykładowi użytkownicy, lekarze, pacjenci, wolne terminy oraz przykładowe wizyty.
 
-Dane logowania
-Administrator
+---
+
+## Dane logowania
+
+### Administrator
+
+```text
 Email: admin@example.com
 Hasło: 1234
-Lekarz 1
+```
+
+### Lekarz 1
+
+```text
 Email: doctor@example.com
 Hasło: 1234
-Lekarz 2
+```
+
+### Lekarz 2
+
+```text
 Email: doctor2@example.com
 Hasło: 1234
-Pacjent 1
+```
+
+### Pacjent 1
+
+```text
 Email: anna@example.com
 Hasło: 1234
-Pacjent 2
+```
+
+### Pacjent 2
+
+```text
 Email: marek@example.com
 Hasło: 1234
-Najważniejsze endpointy
-Autoryzacja
+```
+
+---
+
+## Najważniejsze endpointy
+
+### Autoryzacja
+
+```http
 POST /auth/login
-Lekarze
+```
+
+### Lekarze
+
+```http
 GET /doctors
 GET /doctors/me
-Pacjenci
+```
+
+### Pacjenci
+
+```http
 GET /patients/me
-Wizyty
+```
+
+### Wizyty
+
+```http
 GET /appointments/me
 POST /appointments/book
 DELETE /appointments/{appointmentId}
@@ -122,11 +193,19 @@ GET /appointments/available?doctorId={doctorId}
 GET /appointments/available/all
 GET /appointments/doctor/today
 GET /appointments/doctor/patients/{patientId}/history
-Sloty lekarza
+```
+
+### Sloty lekarza
+
+```http
 GET /slots/me
 POST /slots
 DELETE /slots/{slotId}
-Administrator
+```
+
+### Administrator
+
+```http
 GET /admin/me
 GET /admin/users
 DELETE /admin/users/{userId}
@@ -136,7 +215,11 @@ GET /admin/stats
 GET /admin/doctors/pending
 PUT /admin/doctors/{userId}/approve
 PUT /admin/doctors/{userId}/reject
-Opis działania
+```
+
+---
+
+## Opis działania
 
 Użytkownik loguje się do systemu za pomocą adresu e-mail i hasła. Po poprawnym logowaniu otrzymuje token JWT, który jest wykorzystywany do autoryzacji kolejnych zapytań.
 
@@ -148,6 +231,8 @@ Lekarz może zarządzać swoimi wolnymi terminami oraz przeglądać wizyty pacje
 
 Administrator zarządza użytkownikami, wizytami oraz rejestracjami lekarzy.
 
-Autor
+---
+
+## Autor
 
 Projekt wykonany jako aplikacja webowa w technologii Spring Boot, MySQL, Docker oraz HTML/CSS/JavaScript.
