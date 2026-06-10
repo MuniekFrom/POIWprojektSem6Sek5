@@ -45,7 +45,7 @@ public class SlotsAdapter extends RecyclerView.Adapter<SlotsAdapter.SlotViewHold
         holder.tvSlotStart.setText(context.getString(R.string.slot_start_label, slot.getStartTime()));
         holder.tvSlotEnd.setText(context.getString(R.string.slot_end_label, slot.getEndTime()));
 
-        if (slot.isAvailable()) {
+        if (!slot.isAvailable()) {
             holder.tvSlotStatus.setText(R.string.slot_available);
             holder.tvSlotStatus.setBackgroundResource(R.drawable.bg_slots_badge);
             holder.tvSlotStatus.setTextColor(ContextCompat.getColor(context, R.color.green_text_slots));
