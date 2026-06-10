@@ -8,4 +8,62 @@
     <string name="no_phone">Brak</string>
     <string name="error_fetching_data">Nie udało się pobrać danych pacjenta</string>
     <string name="error_connection">Błąd połączenia z serwerem!</string>
+
+    <string name="visit_id">ID: %1$d</string>
+    <string name="visit_doctor">Lekarz: %1$s</string>
+    <string name="visit_specialization">Specjalizacja: %1$s</string>
+    <string name="visit_start">Start: %1$s</string>
+    <string name="visit_end">Koniec: %1$s</string>
+    <string name="visit_reason">Powód: %1$s</string>
+    <string name="visit_status">Status: %1$s</string>
+
+    <string name="doctor_name_format">%1$s %2$s</string>
+    <string name="slot_count">%1$d termin</string>
+    <string name="slot_count_plural">%1$d terminy</string>
+    <string name="slot_count_many">%1$d terminów</string>
+
+    <string name="header_subtitle">CLINIC APPOINTMENT SYSTEM</string>
+    <string name="header_title">Panel pacjenta</string>
+    <string name="logout">Wyloguj</string>
+    <string name="profile_title">Profil pacjenta</string>
+    <string name="how_to_book_title">Jak zarezerwować wizytę?</string>
+    <string name="how_to_book_desc">Sprawdź kalendarz wolnych terminów, wybierz dzień, godzinę oraz lekarza, a następnie podaj powód wizyty.</string>
+    <string name="step_1">Wybierz dzień w kalendarzu</string>
+    <string name="step_2">Sprawdź lekarzy dostępnych tego dnia</string>
+    <string name="step_3">Zarezerwuj wybrany termin</string>
+    <string name="visits_section_title">WIZYTY</string>
+    <string name="my_visits_title">Moje wizyty</string>
+    <string name="no_visits">Nie masz jeszcze żadnych aktywnych wizyt.</string>
+    <string name="doctors_section_title">LEKARZE</string>
+    <string name="available_doctors_title">Dostępni lekarze</string>
+    <string name="no_doctors">Brak lekarzy.</string>
+    <string name="calendar_section_title">KALENDARZ</string>
+    <string name="calendar_title">Kalendarz wolnych terminów</string>
+    <string name="calendar_desc">Wybierz dzień, aby zobaczyć dostępne godziny u wszystkich lekarzy.</string>
+    <string name="terms_section_title">TERMINY</string>
+    <string name="terms_title">Wolne terminy</string>
+    <string name="terms_placeholder">Wybierz lekarza z listy, aby zobaczyć wolne terminy.</string>
+    <string name="cancel_visit">Anuluj wizytę</string>
+    <string name="show_slots">Pokaż terminy</string>
+    <string name="book_slot">Zarezerwuj</string>
+    <string name="loading_calendar">Ładowanie kalendarza...</string>
+    <string name="booking_confirm_title">Zarezerwuj wizytę</string>
+    <string name="booking_confirm_msg">Czy chcesz zarezerwować termin %1$s - %2$s?</string>
+    <string name="yes">Tak</string>
+    <string name="visit_cancelled">Wizyta anulowana</string>
+    <string name="visit_cancel_error">Błąd anulowania wizyty</string>
+    <string name="visit_booked_success">Wizyta zarezerwowana pomyślnie!</string>
+    <string name="visit_book_error">Nie udało się zarezerwować wizyty</string>
+    <string name="fetching_slots_for_doctor">Pobieranie terminów dla lekarza: %1$s</string>
+    <string name="slot_taken">Zajęte</string>
+    <string name="error_loading_slots">Błąd ładowania terminów</string>
+
+    <string name="slot_id_label">ID slotu: %1$d</string>
+    <string name="slot_doctor_label">Lekarz: %1$s</string>
+    <string name="slot_specialization_label">Specjalizacja: %1$s</string>
+    <string name="slot_start_label">Start: %1$s</string>
+    <string name="slot_end_label">Koniec: %1$s</string>
+    <string name="slot_status_label">Status: </string>
+    <string name="slot_available">Dostępny</string>
+    <string name="visit_reason_hint">Powód wizyty</string>
 </resources>

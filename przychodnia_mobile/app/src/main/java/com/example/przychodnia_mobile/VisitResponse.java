@@ -1,0 +1,41 @@
+package com.example.przychodnia_mobile;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class VisitResponse {
+    private Long id;
+    private String startTime;
+    private String endTime;
+    private String reason;
+    private String status;
+    private DoctorResponse doctor;
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getStartTime() { return startTime; }
+    public void setStartTime(String startTime) { this.startTime = startTime; }
+
+    public String getEndTime() { return endTime; }
+    public void setEndTime(String endTime) { this.endTime = endTime; }
+
+    public String getReason() { return reason; }
+    public void setReason(String reason) { this.reason = reason; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+    public DoctorResponse getDoctor() { return doctor; }
+    public void setDoctor(DoctorResponse doctor) { this.doctor = doctor; }
+
+    // Helper methods for the UI to avoid crashes if doctor is null
+    public String getDoctorName() {
+        return doctor != null ? doctor.getFirstName() + " " + doctor.getLastName() : "Nieznany";
+    }
+
+    public String getSpecialization() {
+        return doctor != null ? doctor.getSpecialization() : "-";
+    }
+}

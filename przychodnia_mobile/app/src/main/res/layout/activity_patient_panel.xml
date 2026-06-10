@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_light">
+    android:background="@color/background_light"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,295 +14,368 @@
         android:padding="16dp">
 
         <!-- Header -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/white">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:padding="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/headerTextContainer"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/btnLogout">
+                    <TextView
+                        android:text="@string/header_subtitle"
+                        android:textSize="10sp"
+                        android:textColor="@color/text_secondary"
+                        android:textStyle="bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <TextView
+                        android:text="@string/header_title"
+                        android:textSize="28sp"
+                        android:textColor="@color/teal_700"
+                        android:textStyle="bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLogout"
+                    android:text="@string/logout"
+                    android:textAllCaps="false"
+                    android:backgroundTint="#0F172A"
+                    app:cornerRadius="20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_card"
-            android:elevation="4dp"
             android:orientation="horizontal"
-            android:padding="24dp"
+            android:baselineAligned="false"
             android:layout_marginBottom="16dp">
 
-            <LinearLayout
+            <!-- Profile Card -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:layout_marginEnd="8dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="CLINIC APPOINTMENT SYSTEM"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                <LinearLayout
+                    android:padding="16dp"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Panel pacjenta"
-                    android:textColor="@color/teal_700"
-                    android:textSize="28sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
+                    <TextView
+                        android:text="@string/profile_title"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_main"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"/>
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnLogout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_button"
-                android:backgroundTint="@color/text_main"
-                android:text="Wyloguj"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textStyle="bold" />
+                    <LinearLayout
+                        android:background="@drawable/bg_edittext"
+                        android:backgroundTint="@color/profile_box_bg"
+                        android:padding="12dp"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView android:id="@+id/tvPatientId" android:text="@string/patient_id" android:textSize="12sp" android:textColor="@color/text_main" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="4dp" tools:text="ID: 2"/>
+                        <TextView android:id="@+id/tvPatientFirstName" android:text="@string/patient_first_name" android:textSize="12sp" android:textColor="@color/text_main" android:textStyle="bold" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="4dp" tools:text="Imię: Marek"/>
+                        <TextView android:id="@+id/tvPatientLastName" android:text="@string/patient_last_name" android:textSize="12sp" android:textColor="@color/text_main" android:textStyle="bold" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="4dp" tools:text="Nazwisko: Wiśniewski"/>
+                        <TextView android:id="@+id/tvPatientPesel" android:text="@string/patient_pesel" android:textSize="12sp" android:textColor="@color/text_main" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="4dp" tools:text="PESEL: 98765432109"/>
+                        <TextView android:id="@+id/tvPatientPhone" android:text="@string/patient_phone" android:textSize="12sp" android:textColor="@color/text_main" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="Telefon: 987654321"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Instructions Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_weight="1.2"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:padding="16dp"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:text="@string/how_to_book_title"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_main"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"/>
+
+                    <TextView
+                        android:text="@string/how_to_book_desc"
+                        android:textSize="11sp"
+                        android:textColor="@color/text_secondary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_edittext"
+                            android:backgroundTint="@color/step_bg"
+                            android:padding="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:gravity="center_vertical">
+                            <TextView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:background="@drawable/bg_step_circle"
+                                android:gravity="center"
+                                android:text="1"
+                                android:textColor="@color/white"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:layout_marginEnd="12dp"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/step_1"
+                                android:textSize="12sp"
+                                android:textColor="@color/text_main"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_edittext"
+                            android:backgroundTint="@color/step_bg"
+                            android:padding="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:gravity="center_vertical">
+                            <TextView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:background="@drawable/bg_step_circle"
+                                android:gravity="center"
+                                android:text="2"
+                                android:textColor="@color/white"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:layout_marginEnd="12dp"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/step_2"
+                                android:textSize="12sp"
+                                android:textColor="@color/text_main"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_edittext"
+                            android:backgroundTint="@color/step_bg"
+                            android:padding="8dp"
+                            android:gravity="center_vertical">
+                            <TextView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:background="@drawable/bg_step_circle"
+                                android:gravity="center"
+                                android:text="3"
+                                android:textColor="@color/white"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:layout_marginEnd="12dp"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/step_3"
+                                android:textSize="12sp"
+                                android:textColor="@color/text_main"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
-        <LinearLayout
+        <!-- My Visits Section -->
+        <TextView
+            android:text="@string/visits_section_title"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_secondary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"/>
+        <TextView
+            android:text="@string/my_visits_title"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginBottom="8dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvMyVisits"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:baselineAligned="false">
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_visit"
+            android:layout_marginBottom="24dp"/>
 
-            <!-- Profil pacjenta -->
+        <TextView
+            android:id="@+id/tvNoVisits"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/no_visits"
+            android:textColor="@color/text_secondary"
+            android:padding="16dp"
+            android:gravity="center"
+            android:visibility="gone"/>
+
+        <!-- Doctors Section -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/white">
+
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/bg_card"
-                android:elevation="4dp"
+                android:padding="16dp"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Profil pacjenta"
-                    android:textColor="@color/text_main"
-                    android:textSize="18sp"
+                    android:text="@string/doctors_section_title"
+                    android:textSize="11sp"
                     android:textStyle="bold"
-                    android:layout_marginBottom="16dp"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_edittext"
-                    android:backgroundTint="#F0FDFA"
-                    android:orientation="vertical"
-                    android:padding="12dp">
-
-                    <TextView android:id="@+id/tvPatientId" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ID: 1" android:textColor="@color/text_main" android:textSize="14sp" android:layout_marginBottom="4dp"/>
-                    <TextView android:id="@+id/tvPatientFirstName" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Imię: Kamil" android:textColor="@color/text_main" android:textSize="14sp" android:layout_marginBottom="4dp"/>
-                    <TextView android:id="@+id/tvPatientLastName" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Nazwisko: Kowal" android:textColor="@color/text_main" android:textSize="14sp" android:layout_marginBottom="4dp"/>
-                    <TextView android:id="@+id/tvPatientPesel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="PESEL: 12345678912" android:textColor="@color/text_main" android:textSize="14sp" android:layout_marginBottom="4dp"/>
-                    <TextView android:id="@+id/tvPatientPhone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Telefon: +48555555555" android:textColor="@color/text_main" android:textSize="14sp"/>
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Jak zarezerwować wizytę? -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.2"
-                android:layout_marginStart="8dp"
-                android:background="@drawable/bg_card"
-                android:elevation="4dp"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Jak zarezerwować wizytę?"
-                    android:textColor="@color/text_main"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Wybierz lekarza z listy, sprawdź wolne terminy i podaj powód wizyty."
                     android:textColor="@color/text_secondary"
-                    android:textSize="12sp"
-                    android:layout_marginBottom="16dp"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:text="@string/available_doctors_title"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_main"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"/>
 
-                <!-- Step 1 -->
-                <LinearLayout
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvDoctors"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_edittext"
-                    android:backgroundTint="@color/step_bg"
-                    android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="8dp"
-                    android:layout_marginBottom="8dp">
-                    <TextView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:background="@drawable/bg_step_circle"
-                        android:gravity="center"
-                        android:text="1"
-                        android:textColor="@color/white"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:layout_marginEnd="8dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Wybierz lekarza"
-                        android:textColor="@color/text_main"
-                        android:textSize="14sp" />
-                </LinearLayout>
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_doctor" />
 
-                <!-- Step 2 -->
-                <LinearLayout
+                <TextView
+                    android:id="@+id/tvNoDoctors"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_edittext"
-                    android:backgroundTint="@color/step_bg"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="8dp"
-                    android:layout_marginBottom="8dp">
-                    <TextView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:background="@drawable/bg_step_circle"
-                        android:gravity="center"
-                        android:text="2"
-                        android:textColor="@color/white"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:layout_marginEnd="8dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Sprawdź dostępne terminy"
-                        android:textColor="@color/text_main"
-                        android:textSize="14sp" />
-                </LinearLayout>
-
-                <!-- Step 3 -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_edittext"
-                    android:backgroundTint="@color/step_bg"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="8dp">
-                    <TextView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:background="@drawable/bg_step_circle"
-                        android:gravity="center"
-                        android:text="3"
-                        android:textColor="@color/white"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:layout_marginEnd="8dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Zarezerwuj wizytę"
-                        android:textColor="@color/text_main"
-                        android:textSize="14sp" />
-                </LinearLayout>
+                    android:text="@string/no_doctors"
+                    android:textColor="@color/text_secondary"
+                    android:padding="16dp"
+                    android:gravity="center"
+                    android:visibility="gone"/>
             </LinearLayout>
-        </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-        <!-- Moje wizyty -->
-        <LinearLayout
+        <!-- Time Slots Card (Wolne terminy) -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cvTimeSlots"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/bg_card"
-            android:elevation="4dp"
-            android:orientation="vertical"
-            android:padding="24dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="WIZYTY"
-                android:textColor="@color/text_secondary"
-                android:textSize="10sp"
-                android:textStyle="bold" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Moje wizyty"
-                android:textColor="@color/text_main"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="16dp"/>
-            <TextView
-                android:id="@+id/tvNoVisits"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Nie masz jeszcze żadnych aktywnych wizyt."
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp" />
-        </LinearLayout>
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/white">
 
-        <!-- Dostępni lekarze -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/bg_card"
-            android:elevation="4dp"
-            android:orientation="vertical"
-            android:padding="24dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="LEKARZE"
-                android:textColor="@color/text_secondary"
-                android:textSize="10sp"
-                android:textStyle="bold" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Dostępni lekarze"
-                android:textColor="@color/text_main"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="16dp"/>
-            <TextView
-                android:id="@+id/tvNoDoctors"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Brak lekarzy."
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp" />
-        </LinearLayout>
+            <LinearLayout
+                android:padding="16dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <!-- Wolne terminy -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/bg_card"
-            android:elevation="4dp"
-            android:orientation="vertical"
-            android:padding="24dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TERMINY"
-                android:textColor="@color/text_secondary"
-                android:textSize="10sp"
-                android:textStyle="bold" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Wolne terminy"
-                android:textColor="@color/text_main"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="16dp"/>
-        </LinearLayout>
+                <TextView
+                    android:text="@string/terms_section_title"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_secondary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:text="@string/terms_title"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_main"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"/>
+
+                <TextView
+                    android:id="@+id/tvSlotsPlaceholder"
+                    android:text="@string/terms_placeholder"
+                    android:textColor="@color/text_secondary"
+                    android:gravity="center"
+                    android:background="@color/step_bg"
+                    android:padding="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvTimeSlots"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_slot"
+                    tools:visibility="visible"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
 </ScrollView>

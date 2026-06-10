@@ -7,6 +7,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class ApiClient {
 
+    // Używamy 10.0.2.2, aby połączyć się z localhost komputera z emulatora Androida
     private static final String BASE_URL = "http://192.168.1.57:8080/";
     private static Retrofit retrofit = null;
 

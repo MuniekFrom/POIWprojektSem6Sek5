@@ -1,8 +1,16 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.Przychodnia_mobile" parent="Theme.Material3.DayNight.NoActionBar">
+    <!-- Base application theme. Force Light mode to match design -->
+    <style name="Base.Theme.Przychodnia_mobile" parent="Theme.Material3.Light.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/teal_700</item>
+        <item name="android:windowBackground">@color/background_light</item>
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
+
+        <!-- Force card and surface colors -->
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/text_main</item>
+        <item name="colorSurfaceVariant">@color/white</item>
     </style>
 
     <style name="Theme.Przychodnia_mobile" parent="Base.Theme.Przychodnia_mobile" />
